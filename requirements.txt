@@ -1,0 +1,4 @@
+playwright==1.45.1
+icalendar==5.1.1
+twilio==9.2.2
+requests==2.32.3

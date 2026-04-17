@@ -1,0 +1,39 @@
+name: Send Planning WhatsApp
+
+on:
+  schedule:
+    - cron: '0 5 * * *'    # 5:00 AM UTC (7:00 AM CEST)
+    - cron: '0 21 * * *'   # 9:00 PM UTC (11:00 PM CEST)
+  workflow_dispatch:        # Allow manual trigger from GitHub UI
+
+jobs:
+  send-planning:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium
+
+      - name: Run planning scraper
+        env:
+          HYPERPLANNING_USERNAME: ${{ secrets.HYPERPLANNING_USERNAME }}
+          HYPERPLANNING_PASSWORD: ${{ secrets.HYPERPLANNING_PASSWORD }}
+          ICS_URL: ${{ secrets.ICS_URL }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_WHATSAPP_FROM: ${{ secrets.TWILIO_WHATSAPP_FROM }}
+          WHATSAPP_TO: ${{ secrets.WHATSAPP_TO }}
+        run: python planning_scraper.py
