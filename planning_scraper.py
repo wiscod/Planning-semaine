@@ -1,6 +1,7 @@
 import asyncio
 import re
 import os
+import json
 from datetime import datetime, timedelta
 from icalendar import Calendar
 import requests
@@ -221,6 +222,42 @@ def send_whatsapp(message: str) -> bool:
         return False
 
 
+def save_planning_json(courses_by_week: dict, week_current: int, week_next: int) -> bool:
+    """Sauvegarde le planning en fichier JSON pour le widget iPhone."""
+    try:
+        planning_data = {
+            "timestamp": datetime.now().isoformat(),
+            "weeks": {}
+        }
+
+        for week_num in [week_current, week_next]:
+            cours_list = courses_by_week.get(week_num, [])
+            if not cours_list:
+                continue
+
+            planning_data["weeks"][str(week_num)] = {
+                "semaine": week_num,
+                "courses": [
+                    {
+                        "date": course["date"],
+                        "time": course["time"],
+                        "matiere": course["matiere"]
+                    }
+                    for course in cours_list
+                ]
+            }
+
+        # Sauvegarder localement pour GitHub Actions
+        with open("planning.json", "w", encoding="utf-8") as f:
+            json.dump(planning_data, f, ensure_ascii=False, indent=2)
+
+        print("✅ Planning sauvegardé en JSON")
+        return True
+    except Exception as e:
+        print(f"⚠️ Erreur sauvegarde JSON: {e}")
+        return False
+
+
 async def main():
     print("=" * 60)
     print(f"Execution à {datetime.now().strftime('%H:%M:%S')}")
@@ -247,6 +284,10 @@ async def main():
     print(message)
     print("=" * 60)
 
+    # Sauvegarder en JSON pour le widget iPhone
+    save_planning_json(courses_by_week, week_current, week_next)
+
+    # Envoyer via WhatsApp
     send_whatsapp(message)
 
 
