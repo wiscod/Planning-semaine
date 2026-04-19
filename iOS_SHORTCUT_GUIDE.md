@@ -32,23 +32,26 @@ Vous allez ajouter ces actions **dans cet ordre exact** :
 - Ajouter : **"Get contents of URL"**
 - URL : `https://wiscod.github.io/Planning-semaine/planning.json`
 
-### Action 2️⃣ : Parser le JSON
+### Action 2️⃣ : Extraire le timestamp
 - Ajouter : **"Get Dictionary Value"**
-- Dictionnaire : Résultat de l'action précédente
+- Dictionnaire : Résultat de l'action 1
 - Clé : `timestamp`
+- **Renommer** : "Last Updated" (optionnel mais utile)
 
 ### Action 3️⃣ : Extraire les semaines
-- Ajouter : **"Get Dictionary Value"** (encore)
+- Ajouter : **"Get Dictionary Value"**
+- Dictionnaire : Résultat de l'action 1
 - Clé : `weeks`
 
-### Action 4️⃣ : Afficher notification
-- Ajouter : **"Show Result"** ou **"Show Notification"**
-- Titre : 📅 Votre Planning
-- Corps : Insérer le résultat précédent
+### Action 4️⃣ : Afficher l'heure de mise à jour (IMPORTANT! ⏰)
+- Ajouter : **"Show Notification"**
+- Titre : ⏰ Planning mis à jour
+- Corps : Insérer la valeur de "Last Updated" (Action 2)
+- Son : Choisir une notification
 
-### Action 5️⃣ (Optionnel) : Son
-- Ajouter : **"Play Sound"**
-- Son : Choisir un son notification
+### Action 5️⃣ : Afficher le planning
+- Ajouter : **"Show Result"**
+- Contenu : Insérer le résultat de l'action 3
 
 ---
 
