@@ -6,6 +6,9 @@ on:
     - cron: '0 21 * * *'   # 9:00 PM UTC (11:00 PM CEST)
   workflow_dispatch:        # Allow manual trigger from GitHub UI
 
+permissions:
+  contents: write
+
 jobs:
   send-planning:
     runs-on: ubuntu-latest
@@ -36,4 +39,5 @@ jobs:
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_WHATSAPP_FROM: ${{ secrets.TWILIO_WHATSAPP_FROM }}
           WHATSAPP_TO: ${{ secrets.WHATSAPP_TO }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python planning_scraper.py
