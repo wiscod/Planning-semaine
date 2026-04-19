@@ -2,6 +2,7 @@ import asyncio
 import re
 import os
 import json
+import subprocess
 from datetime import datetime, timedelta
 from icalendar import Calendar
 import requests
@@ -247,8 +248,9 @@ def save_planning_json(courses_by_week: dict, week_current: int, week_next: int)
                 ]
             }
 
-        # Sauvegarder localement pour GitHub Actions
-        with open("planning.json", "w", encoding="utf-8") as f:
+        # Sauvegarder dans /docs pour GitHub Pages
+        os.makedirs("docs", exist_ok=True)
+        with open("docs/planning.json", "w", encoding="utf-8") as f:
             json.dump(planning_data, f, ensure_ascii=False, indent=2)
 
         print("✅ Planning sauvegardé en JSON")
@@ -286,6 +288,17 @@ async def main():
 
     # Sauvegarder en JSON pour le widget iPhone
     save_planning_json(courses_by_week, week_current, week_next)
+
+    # Committer et pousser le fichier JSON vers GitHub
+    try:
+        subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
+        subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
+        subprocess.run(['git', 'add', 'docs/planning.json'], check=True)
+        subprocess.run(['git', 'commit', '-m', 'Update planning.json'], check=True)
+        subprocess.run(['git', 'push'], check=True)
+        print("✅ planning.json poussé vers GitHub")
+    except Exception as e:
+        print(f"⚠️ Erreur git: {e}")
 
     # Envoyer via WhatsApp
     send_whatsapp(message)
