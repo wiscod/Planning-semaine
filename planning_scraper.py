@@ -291,10 +291,16 @@ async def main():
 
     # Committer et pousser le fichier JSON vers GitHub
     try:
+        github_token = os.getenv('GITHUB_TOKEN', '')
         subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
         subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
         subprocess.run(['git', 'add', 'docs/planning.json'], check=True)
         subprocess.run(['git', 'commit', '-m', 'Update planning.json'], check=True)
+        if github_token:
+            repo_url = subprocess.run(['git', 'config', '--get', 'remote.origin.url'],
+                                     capture_output=True, text=True, check=True).stdout.strip()
+            auth_url = repo_url.replace('https://', f'https://x-access-token:{github_token}@')
+            subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], check=True)
         subprocess.run(['git', 'push'], check=True)
         print("✅ planning.json poussé vers GitHub")
     except Exception as e:
