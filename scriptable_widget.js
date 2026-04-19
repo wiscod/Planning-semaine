@@ -1,250 +1,132 @@
 // Planning Widget - Scriptable
-// Copier ce script dans l'app Scriptable
-
 const JSON_URL = "https://wiscod.github.io/Planning-semaine/planning.json"
-const PURPLE = new Color("#764ba2")
-const BLUE = new Color("#667eea")
-const LIGHT_PURPLE = new Color("#f0ebf8")
 
-async function loadPlanning() {
-  try {
-    const req = new Request(JSON_URL)
-    return await req.loadJSON()
-  } catch (e) {
-    return null
-  }
+function getISOWeek() {
+  const d = new Date()
+  const day = d.getDay() || 7
+  d.setDate(d.getDate() + 4 - day)
+  const yearStart = new Date(d.getFullYear(), 0, 1)
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 }
 
-function getCurrentWeekNumber() {
-  const now = new Date()
-  const start = new Date(now.getFullYear(), 0, 1)
-  const diff = now - start
-  const oneWeek = 604800000
-  return Math.ceil((diff / oneWeek) + start.getDay() / 7)
+function formatDate(ts) {
+  const d = new Date(ts)
+  return d.toLocaleString("fr-FR", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" })
 }
 
-function getTodayCourses(data) {
-  const now = new Date()
-  const weekNum = getCurrentWeekNumber()
-  const weekData = data.weeks[String(weekNum)]
-  if (!weekData) return []
-
-  const monthNames = ["january","february","march","april","may","june",
-                      "july","august","september","october","november","december"]
-  const todayStr = `${now.getDate()} ${monthNames[now.getMonth()]}`
-
-  return weekData.courses.filter(c => c.date.toLowerCase() === todayStr)
+function getTodayStr() {
+  const d = new Date()
+  const months = ["january","february","march","april","may","june",
+                  "july","august","september","october","november","december"]
+  return `${d.getDate()} ${months[d.getMonth()]}`
 }
 
-function getWeekCourses(data) {
-  const weekNum = getCurrentWeekNumber()
-  const weekData = data.weeks[String(weekNum)]
-  return weekData ? weekData.courses : []
+// Charger le JSON
+let data
+try {
+  const req = new Request(JSON_URL)
+  data = await req.loadJSON()
+} catch(e) {
+  const w = new ListWidget()
+  w.backgroundColor = new Color("#764ba2")
+  const t = w.addText("❌ Erreur réseau")
+  t.textColor = Color.white()
+  t.font = Font.systemFont(14)
+  Script.setWidget(w)
+  Script.complete()
+  return
 }
 
-function buildSmallWidget(courses, timestamp) {
-  const widget = new ListWidget()
-  widget.backgroundGradient = makeGradient()
-  widget.setPadding(12, 12, 12, 12)
+// Trouver les cours
+const weekNum = String(getISOWeek())
+const todayStr = getTodayStr()
+const weekData = data.weeks[weekNum]
+const allCourses = weekData ? weekData.courses : []
+const todayCourses = allCourses.filter(c => c.date.toLowerCase() === todayStr)
 
-  const title = widget.addText("📅 Planning")
-  title.font = Font.boldSystemFont(13)
-  title.textColor = Color.white()
+// Construire le widget
+const widget = new ListWidget()
+widget.backgroundColor = new Color("#4c3490")
+widget.setPadding(14, 14, 14, 14)
+widget.url = "https://wiscod.github.io/Planning-semaine/"
+widget.refreshAfterDate = new Date(Date.now() + 60 * 60 * 1000)
 
+// Titre
+const title = widget.addText("📅 PLANNING")
+title.font = Font.boldSystemFont(14)
+title.textColor = Color.white()
+widget.addSpacer(2)
+
+const tsText = widget.addText("⏰ " + formatDate(data.timestamp))
+tsText.font = Font.systemFont(10)
+tsText.textColor = new Color("#ffffff88")
+widget.addSpacer(8)
+
+const family = config.widgetFamily
+
+if (family === "small") {
+  // Juste aujourd'hui
+  const label = widget.addText("AUJOURD'HUI")
+  label.font = Font.boldSystemFont(9)
+  label.textColor = new Color("#ffe066")
   widget.addSpacer(4)
 
-  if (courses.length === 0) {
-    const msg = widget.addText("Pas de cours aujourd'hui ✅")
-    msg.font = Font.systemFont(11)
-    msg.textColor = new Color("#ffffff", 0.8)
+  if (todayCourses.length === 0) {
+    const m = widget.addText("Pas de cours ✅")
+    m.font = Font.systemFont(12)
+    m.textColor = Color.white()
   } else {
-    const max = Math.min(courses.length, 3)
-    for (let i = 0; i < max; i++) {
-      const c = courses[i]
+    for (const c of todayCourses.slice(0, 3)) {
       const row = widget.addStack()
       row.layoutHorizontally()
-      row.spacing = 4
-
+      row.spacing = 6
       const time = row.addText(c.time)
       time.font = Font.boldSystemFont(11)
       time.textColor = new Color("#ffe066")
-
       const name = row.addText(c.matiere)
       name.font = Font.systemFont(11)
       name.textColor = Color.white()
       name.lineLimit = 1
-      widget.addSpacer(2)
-    }
-    if (courses.length > 3) {
-      const more = widget.addText(`+${courses.length - 3} autres`)
-      more.font = Font.systemFont(10)
-      more.textColor = new Color("#ffffff", 0.6)
-    }
-  }
-
-  widget.addSpacer()
-  const ts = widget.addText(formatTimestamp(timestamp))
-  ts.font = Font.systemFont(9)
-  ts.textColor = new Color("#ffffff", 0.5)
-
-  return widget
-}
-
-function buildMediumWidget(courses, weekCourses, timestamp) {
-  const widget = new ListWidget()
-  widget.backgroundGradient = makeGradient()
-  widget.setPadding(14, 16, 14, 16)
-
-  // Header
-  const header = widget.addStack()
-  header.layoutHorizontally()
-  const title = header.addText("📅 VOTRE PLANNING")
-  title.font = Font.boldSystemFont(14)
-  title.textColor = Color.white()
-  header.addSpacer()
-  const ts = header.addText(formatTimestamp(timestamp))
-  ts.font = Font.systemFont(10)
-  ts.textColor = new Color("#ffffff", 0.6)
-
-  widget.addSpacer(8)
-
-  // Aujourd'hui
-  const todayLabel = widget.addText("AUJOURD'HUI")
-  todayLabel.font = Font.boldSystemFont(10)
-  todayLabel.textColor = new Color("#ffe066")
-
-  widget.addSpacer(4)
-
-  if (courses.length === 0) {
-    const msg = widget.addText("Pas de cours ✅")
-    msg.font = Font.systemFont(12)
-    msg.textColor = Color.white()
-  } else {
-    const max = Math.min(courses.length, 4)
-    for (let i = 0; i < max; i++) {
-      const c = courses[i]
-      const row = widget.addStack()
-      row.layoutHorizontally()
-      row.spacing = 8
-
-      const time = row.addText(c.time)
-      time.font = Font.boldSystemFont(12)
-      time.textColor = new Color("#ffe066")
-      time.minimumScaleFactor = 0.8
-
-      const name = row.addText(c.matiere)
-      name.font = Font.systemFont(12)
-      name.textColor = Color.white()
-      name.lineLimit = 1
-
       widget.addSpacer(3)
     }
   }
 
-  return widget
-}
-
-function buildLargeWidget(data, timestamp) {
-  const widget = new ListWidget()
-  widget.backgroundGradient = makeGradient()
-  widget.setPadding(16, 16, 16, 16)
-
-  const title = widget.addText("📅 VOTRE PLANNING")
-  title.font = Font.boldSystemFont(16)
-  title.textColor = Color.white()
-
-  const ts = widget.addText("⏰ " + formatTimestamp(timestamp))
-  ts.font = Font.systemFont(10)
-  ts.textColor = new Color("#ffffff", 0.6)
-
-  widget.addSpacer(10)
-
-  const weekNum = getCurrentWeekNumber()
-  const weekData = data.weeks[String(weekNum)]
-
-  if (!weekData || weekData.courses.length === 0) {
-    const msg = widget.addText("Pas de cours cette semaine")
-    msg.font = Font.systemFont(13)
-    msg.textColor = Color.white()
-    return widget
-  }
-
-  let currentDay = null
-  let count = 0
-
-  for (const course of weekData.courses) {
-    if (count >= 10) break
-
-    if (course.date !== currentDay) {
-      currentDay = course.date
-      widget.addSpacer(6)
-      const dayLabel = widget.addText("✨ " + course.date.toUpperCase())
-      dayLabel.font = Font.boldSystemFont(11)
-      dayLabel.textColor = new Color("#ffe066")
-    }
-
-    const row = widget.addStack()
-    row.layoutHorizontally()
-    row.spacing = 8
-
-    const time = row.addText(course.time)
-    time.font = Font.boldSystemFont(12)
-    time.textColor = Color.white()
-
-    const name = row.addText(course.matiere)
-    name.font = Font.systemFont(12)
-    name.textColor = new Color("#ffffff", 0.9)
-    name.lineLimit = 1
-
-    widget.addSpacer(2)
-    count++
-  }
-
-  return widget
-}
-
-function makeGradient() {
-  const gradient = new LinearGradient()
-  gradient.colors = [BLUE, PURPLE]
-  gradient.locations = [0, 1]
-  gradient.startPoint = new Point(0, 0)
-  gradient.endPoint = new Point(1, 1)
-  return gradient
-}
-
-function formatTimestamp(ts) {
-  const d = new Date(ts)
-  return d.toLocaleString("fr-FR", {
-    day: "2-digit", month: "2-digit",
-    hour: "2-digit", minute: "2-digit"
-  })
-}
-
-// Main
-const data = await loadPlanning()
-
-if (!data) {
-  const widget = new ListWidget()
-  widget.backgroundGradient = makeGradient()
-  const err = widget.addText("❌ Planning indisponible")
-  err.textColor = Color.white()
-  Script.setWidget(widget)
-  Script.complete()
 } else {
-  const todayCourses = getTodayCourses(data)
-  const weekCourses = getWeekCourses(data)
-  const family = config.widgetFamily
-
-  let widget
-  if (family === "small") {
-    widget = buildSmallWidget(todayCourses, data.timestamp)
-  } else if (family === "large") {
-    widget = buildLargeWidget(data, data.timestamp)
+  // Medium / Large : semaine complète groupée par jour
+  if (allCourses.length === 0) {
+    const m = widget.addText("Pas de cours cette semaine")
+    m.font = Font.systemFont(13)
+    m.textColor = Color.white()
   } else {
-    widget = buildMediumWidget(todayCourses, weekCourses, data.timestamp)
-  }
+    let currentDay = null
+    let count = 0
+    const max = family === "large" ? 12 : 5
 
-  widget.refreshAfterDate = new Date(Date.now() + 60 * 60 * 1000)
-  Script.setWidget(widget)
-  Script.complete()
+    for (const c of allCourses) {
+      if (count >= max) break
+      if (c.date !== currentDay) {
+        currentDay = c.date
+        if (count > 0) widget.addSpacer(4)
+        const dayLabel = widget.addText("✨ " + c.date.toUpperCase())
+        dayLabel.font = Font.boldSystemFont(10)
+        dayLabel.textColor = new Color("#ffe066")
+        widget.addSpacer(2)
+      }
+      const row = widget.addStack()
+      row.layoutHorizontally()
+      row.spacing = 8
+      const time = row.addText(c.time)
+      time.font = Font.boldSystemFont(12)
+      time.textColor = Color.white()
+      const name = row.addText(c.matiere)
+      name.font = Font.systemFont(12)
+      name.textColor = new Color("#ffffffcc")
+      name.lineLimit = 1
+      widget.addSpacer(2)
+      count++
+    }
+  }
 }
+
+Script.setWidget(widget)
+Script.complete()
