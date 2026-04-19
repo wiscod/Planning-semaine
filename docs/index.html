@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planning Semaine</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #333; margin-bottom: 8px; font-size: 28px; }
+        .timestamp { color: #888; font-size: 12px; margin-bottom: 24px; }
+        .week { margin-bottom: 24px; }
+        .week-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .course {
+            background: #f5f5f5;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 VOTRE PLANNING</h1>
+        <div id="content">Chargement...</div>
+    </div>
+    <script>
+        fetch('./planning.json')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = 'Planning chargé avec succès!';
+            })
+            .catch(e => {
+                document.getElementById('content').innerHTML = 'Planning indisponible pour le moment';
+            });
+    </script>
+</body>
+</html>
