@@ -1,1 +1,55 @@
-{}
+{
+  "timestamp": "2026-04-19T21:12:26.700903",
+  "weeks": {
+    "16": {
+      "semaine": 16,
+      "courses": [
+        {
+          "date": "13 april",
+          "time": "10:00",
+          "matiere": "Hiring strategy"
+        },
+        {
+          "date": "15 april",
+          "time": "09:30",
+          "matiere": "Soft-Defined DC Admin."
+        },
+        {
+          "date": "15 april",
+          "time": "14:00",
+          "matiere": "Soft-Defined DC Admin."
+        },
+        {
+          "date": "17 april",
+          "time": "10:00",
+          "matiere": "Hiring strategy"
+        }
+      ]
+    },
+    "17": {
+      "semaine": 17,
+      "courses": [
+        {
+          "date": "20 april",
+          "time": "10:00",
+          "matiere": "Hiring strategy"
+        },
+        {
+          "date": "22 april",
+          "time": "09:30",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "22 april",
+          "time": "14:00",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "23 april",
+          "time": "10:00",
+          "matiere": "Hiring strategy"
+        }
+      ]
+    }
+  }
+}
