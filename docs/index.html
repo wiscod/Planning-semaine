@@ -1,206 +1,190 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Planning Semaine</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        .header {
-            padding: 16px 20px 8px;
-            color: white;
-        }
-        h1 { font-size: 22px; font-weight: 700; }
-        .timestamp { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-        .dots {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.4);
-            transition: background 0.3s;
-        }
-        .dot.active { background: white; }
-        .carousel {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-            position: relative;
-        }
-        .slides {
-            display: flex;
-            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            height: 100%;
-        }
-        .slide {
-            min-width: 100vw;
-            padding: 0 16px 20px;
-            overflow-y: auto;
-        }
-        .week-title {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 12px;
-            backdrop-filter: blur(10px);
-        }
-        .day-name {
-            color: rgba(255,255,255,0.9);
-            font-weight: 600;
-            font-size: 13px;
-            margin: 12px 0 6px;
-            padding-left: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .course {
-            background: white;
-            padding: 12px 14px;
-            margin-bottom: 6px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .time {
-            color: #667eea;
-            font-weight: 700;
-            font-size: 13px;
-            min-width: 42px;
-        }
-        .matiere {
-            color: #333;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .error {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        .nav-hint {
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 11px;
-            padding: 4px 0 8px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning de la Semaine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f4f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .container { width: 100%; max-width: 780px; }
+
+  h1 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 28px;
+  }
+
+  .week-range {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 36px;
+    letter-spacing: -0.02em;
+  }
+
+  .week-block { margin-bottom: 48px; }
+
+  .planning { display: flex; flex-direction: column; gap: 2px; }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    min-height: 64px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .day-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .day-content {
+    background: #fff;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    border-top: 1px solid #ebebeb;
+    border-right: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .task {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 14px;
+    color: #2a2a2a;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .task::before { content: '—'; color: #bbb; font-size: 11px; flex-shrink: 0; }
+
+  .task-start, .task-duration {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #aaa;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  .empty { font-size: 13px; color: #ccc; font-style: italic; }
+
+  .lundi .day-label, .mardi .day-label, .mercredi .day-label,
+  .jeudi .day-label, .vendredi .day-label { background: #7c9cbf; }
+
+  .samedi .day-label, .dimanche .day-label { background: #9b8ec4; }
+
+  .error { color: #a55; font-size: 14px; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>📅 VOTRE PLANNING</h1>
-        <div class="timestamp" id="timestamp">Chargement...</div>
-    </div>
-    <div class="dots" id="dots"></div>
-    <div class="nav-hint" id="hint"></div>
-    <div class="carousel">
-        <div class="slides" id="slides"></div>
-    </div>
+<div class="container">
+  <h1>Planning de la semaine</h1>
+  <div class="week-range" id="timestamp">Chargement...</div>
+  <div id="weeks"></div>
+</div>
 
-    <script>
-        let currentSlide = 0;
-        let totalSlides = 0;
-        let startX = 0;
-        let isDragging = false;
+<script>
+  const MONTHS_EN = ["january","february","march","april","may","june","july","august","september","october","november","december"];
+  const MONTHS_FR = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  const DAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+  const ORDER = ["lundi","mardi","mercredi","jeudi","vendredi","samedi","dimanche"];
 
-        async function loadPlanning() {
-            try {
-                const response = await fetch('./planning.json');
-                if (!response.ok) throw new Error('Fichier non trouvé');
-                const data = await response.json();
+  function parseDate(dateStr) {
+    const parts = dateStr.toLowerCase().split(" ");
+    const day = parseInt(parts[0]);
+    const monthIdx = MONTHS_EN.indexOf(parts[1]);
+    if (monthIdx < 0) return null;
+    const year = new Date().getFullYear();
+    return { day, monthIdx, dayName: DAYS[new Date(year, monthIdx, day).getDay()] };
+  }
 
-                const timestamp = new Date(data.timestamp);
-                document.getElementById('timestamp').textContent = '⏰ ' + timestamp.toLocaleString('fr-FR', {
-                    day: '2-digit', month: '2-digit', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit'
-                });
+  function fmtDayLabel(p) {
+    return `${p.dayName} ${p.day} ${MONTHS_FR[p.monthIdx]}`;
+  }
 
-                const weeks = Object.values(data.weeks);
-                totalSlides = weeks.length;
+  async function load() {
+    try {
+      const r = await fetch('./planning.json');
+      const data = await r.json();
 
-                const slidesEl = document.getElementById('slides');
-                const dotsEl = document.getElementById('dots');
-                slidesEl.innerHTML = '';
-                dotsEl.innerHTML = '';
+      const ts = new Date(data.timestamp);
+      document.getElementById('timestamp').textContent =
+        'Mis à jour le ' + ts.toLocaleString('fr-FR', { day:'2-digit', month:'long', hour:'2-digit', minute:'2-digit' });
 
-                weeks.forEach((weekData, i) => {
-                    const slide = document.createElement('div');
-                    slide.className = 'slide';
+      const weeksEl = document.getElementById('weeks');
+      weeksEl.innerHTML = '';
 
-                    let html = `<div class="week-title">SEMAINE ${weekData.semaine}</div>`;
-                    let currentDay = null;
-                    for (const course of weekData.courses) {
-                        if (course.date !== currentDay) {
-                            currentDay = course.date;
-                            html += `<div class="day-name">✨ ${currentDay.toUpperCase()}</div>`;
-                        }
-                        html += `<div class="course"><span class="time">${course.time}</span><span class="matiere">${course.matiere}</span></div>`;
-                    }
-                    slide.innerHTML = html;
-                    slidesEl.appendChild(slide);
+      for (const [num, week] of Object.entries(data.weeks)) {
+        const byDay = {};
+        for (const c of week.courses) {
+          const p = parseDate(c.date);
+          if (!p) continue;
+          const key = p.dayName;
+          if (!byDay[key]) byDay[key] = { label: fmtDayLabel(p), tasks: [] };
+          byDay[key].tasks.push(c);
+        }
 
-                    const dot = document.createElement('div');
-                    dot.className = 'dot' + (i === 0 ? ' active' : '');
-                    dotsEl.appendChild(dot);
-                });
+        const block = document.createElement('div');
+        block.className = 'week-block';
+        let html = `<div class="week-range">Semaine ${week.semaine}</div><div class="planning">`;
 
-                if (weeks.length > 1) {
-                    document.getElementById('hint').textContent = '← glissez pour naviguer →';
-                }
-
-                setupSwipe();
-            } catch (e) {
-                document.getElementById('slides').innerHTML = `<div class="slide"><div class="error">Erreur: ${e.message}</div></div>`;
+        for (const day of ORDER) {
+          const d = byDay[day];
+          html += `<div class="day-row ${day}"><div class="day-label">${day}</div><div class="day-content">`;
+          if (d) {
+            html += `<div style="font-family:'DM Mono',monospace;font-size:10px;color:#999;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.1em;">${d.label}</div>`;
+            for (const t of d.tasks) {
+              html += `<div class="task">${t.matiere}<span class="task-start">début ${t.time}</span></div>`;
             }
+          } else {
+            html += `<div class="empty">—</div>`;
+          }
+          html += `</div></div>`;
         }
 
-        function goTo(index) {
-            currentSlide = Math.max(0, Math.min(index, totalSlides - 1));
-            document.getElementById('slides').style.transform = `translateX(-${currentSlide * 100}vw)`;
-            document.querySelectorAll('.dot').forEach((d, i) => {
-                d.classList.toggle('active', i === currentSlide);
-            });
-        }
+        html += `</div>`;
+        block.innerHTML = html;
+        weeksEl.appendChild(block);
+      }
+    } catch (e) {
+      document.getElementById('weeks').innerHTML = `<div class="error">Erreur: ${e.message}</div>`;
+    }
+  }
 
-        function setupSwipe() {
-            const carousel = document.querySelector('.carousel');
-
-            carousel.addEventListener('touchstart', e => {
-                startX = e.touches[0].clientX;
-                isDragging = true;
-            }, { passive: true });
-
-            carousel.addEventListener('touchend', e => {
-                if (!isDragging) return;
-                const diff = startX - e.changedTouches[0].clientX;
-                if (Math.abs(diff) > 50) {
-                    goTo(currentSlide + (diff > 0 ? 1 : -1));
-                }
-                isDragging = false;
-            }, { passive: true });
-        }
-
-        loadPlanning();
-        setInterval(loadPlanning, 3600000);
-    </script>
+  load();
+  setInterval(load, 3600000);
+</script>
 </body>
 </html>
