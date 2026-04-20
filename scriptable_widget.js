@@ -201,27 +201,27 @@ function addWeekContent(w, courses, max) {
 
     if (c.date !== currentDay) {
       currentDay = c.date
-      if (count > 0) w.addSpacer(4)
+      if (count > 0) w.addSpacer(10)
       const dayLabel = w.addText("✨ " + formatDayFr(c.date))
-      dayLabel.font = Font.boldSystemFont(10)
+      dayLabel.font = Font.boldSystemFont(11)
       dayLabel.textColor = new Color("#ffe066")
-      w.addSpacer(2)
+      w.addSpacer(6)
     }
 
     const row = w.addStack()
     row.layoutHorizontally()
-    row.spacing = 8
+    row.spacing = 10
 
     const time = row.addText(c.time)
-    time.font = Font.boldSystemFont(12)
+    time.font = Font.boldSystemFont(13)
     time.textColor = Color.white()
 
     const name = row.addText(c.matiere)
-    name.font = Font.systemFont(12)
+    name.font = Font.systemFont(13)
     name.textColor = new Color("#ffffffcc")
     name.lineLimit = 1
 
-    w.addSpacer(2)
+    w.addSpacer(6)
     count++
   }
 }
