@@ -79,7 +79,7 @@ function build(data, family, weekOffset) {
     day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit"
   })
   const updated = w.addText(`maj ${tsStr}`)
-  updated.font = Font.monospacedSystemFont(8)
+  updated.font = Font.regularMonospacedSystemFont(8)
   updated.textOpacity = 0.6
 
   w.addSpacer(8)
@@ -120,7 +120,7 @@ function build(data, family, weekOffset) {
       row.spacing = 8
 
       const time = row.addText(t.time)
-      time.font = Font.monospacedSystemFont(timeFont)
+      time.font = Font.regularMonospacedSystemFont(timeFont)
 
       const name = row.addText(t.matiere)
       name.font = Font.systemFont(taskFont)
