@@ -2,8 +2,10 @@ name: Send Planning WhatsApp
 
 on:
   schedule:
-    - cron: '0 5 * * *'    # 5:00 AM UTC (7:00 AM CEST)
-    - cron: '0 21 * * *'   # 9:00 PM UTC (11:00 PM CEST)
+    - cron: '0 5 * * *'    # 7:00 CEST
+    - cron: '0 11 * * *'   # 13:00 CEST
+    - cron: '0 15 * * *'   # 17:00 CEST
+    - cron: '0 21 * * *'   # 23:00 CEST
   workflow_dispatch:        # Allow manual trigger from GitHub UI
 
 permissions:
