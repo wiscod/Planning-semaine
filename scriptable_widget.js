@@ -4,9 +4,18 @@ const JSON_URL = "https://wiscod.github.io/Planning-semaine/planning.json"
 
 const MONTHS_EN = ["january","february","march","april","may","june",
                    "july","august","september","october","november","december"]
-const MONTHS_FR = ["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN",
-                   "JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"]
-const DAYS_FR = ["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"]
+const MONTHS_FR = ["janvier","février","mars","avril","mai","juin",
+                   "juillet","août","septembre","octobre","novembre","décembre"]
+const DAYS_FR = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]
+
+const BG = new Color("#f5f4f0")
+const CARD_BG = new Color("#ffffff")
+const BORDER = new Color("#ebebeb")
+const TEXT_DARK = new Color("#2a2a2a")
+const TEXT_MUTED = new Color("#999999")
+const TEXT_FAINT = new Color("#bbbbbb")
+const BLUE = new Color("#7c9cbf")
+const PURPLE = new Color("#9b8ec4")
 
 async function main() {
   const weekOffset = parseInt(args.widgetParameter) === 2 ? 1 : 0
@@ -34,7 +43,6 @@ async function fetchData() {
     req.timeoutInterval = 10
     return await req.loadJSON()
   } catch (e) {
-    console.error("Fetch error: " + e)
     return null
   }
 }
@@ -47,184 +55,136 @@ function getISOWeek() {
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 }
 
-function getTodayStr() {
-  const d = new Date()
-  return `${d.getDate()} ${MONTHS_EN[d.getMonth()]}`
-}
-
-function formatTs(ts) {
-  return new Date(ts).toLocaleString("fr-FR", {
-    day: "2-digit", month: "2-digit",
-    hour: "2-digit", minute: "2-digit"
-  })
-}
-
-// Convertit "13 april" → "LUNDI 13 AVRIL"
-function formatDayFr(dateStr) {
+function parseDate(dateStr) {
   const parts = dateStr.toLowerCase().split(" ")
-  if (parts.length < 2) return dateStr.toUpperCase()
-
+  if (parts.length < 2) return null
   const day = parseInt(parts[0])
   const monthIdx = MONTHS_EN.indexOf(parts[1])
-  if (monthIdx < 0) return dateStr.toUpperCase()
+  if (monthIdx < 0) return null
+  const d = new Date(new Date().getFullYear(), monthIdx, day)
+  return { day, monthIdx, dayIdx: d.getDay(), dayName: DAYS_FR[d.getDay()] }
+}
 
-  const year = new Date().getFullYear()
-  const d = new Date(year, monthIdx, day)
-  const weekday = DAYS_FR[d.getDay()]
-  return `${weekday} ${day} ${MONTHS_FR[monthIdx]}`
+function isWeekend(dayIdx) {
+  return dayIdx === 0 || dayIdx === 6
 }
 
 function buildErrorWidget(msg) {
   const w = new ListWidget()
-  w.backgroundColor = new Color("#764ba2")
+  w.backgroundColor = BG
   w.setPadding(14, 14, 14, 14)
-  const t = w.addText("❌ " + msg)
-  t.textColor = Color.white()
-  t.font = Font.boldSystemFont(13)
+  const t = w.addText("Erreur: " + msg)
+  t.textColor = TEXT_DARK
+  t.font = Font.systemFont(13)
   return w
 }
 
 function buildWidget(data, family, weekOffset) {
   const w = new ListWidget()
-  w.backgroundColor = new Color("#4c3490")
-  w.setPadding(14, 14, 14, 14)
+  w.backgroundColor = BG
+  w.setPadding(12, 12, 12, 12)
   w.url = "https://wiscod.github.io/Planning-semaine/"
 
   const currentWeek = getISOWeek()
   const targetWeek = currentWeek + weekOffset
   const weekData = data.weeks[String(targetWeek)]
   const allCourses = weekData ? weekData.courses : []
-  const todayStr = getTodayStr()
-  const todayCourses = weekOffset === 0
-    ? allCourses.filter(c => c.date.toLowerCase() === todayStr)
-    : []
 
-  // Titre
-  const titleLabel = weekOffset === 0 ? "📅 CETTE SEMAINE" : "📅 SEMAINE PROCHAINE"
-  const title = w.addText(titleLabel)
-  title.font = Font.boldSystemFont(13)
-  title.textColor = Color.white()
+  // Header
+  const title = w.addText(weekOffset === 0 ? "CETTE SEMAINE" : "SEMAINE PROCHAINE")
+  title.font = new Font("Menlo-Bold", 9)
+  title.textColor = TEXT_MUTED
 
   w.addSpacer(2)
-  const subtitle = w.addText(`Semaine ${targetWeek} · ⏰ ${formatTs(data.timestamp)}`)
-  subtitle.font = Font.systemFont(9)
-  subtitle.textColor = new Color("#ffffff88")
+  const subtitle = w.addText(`Semaine ${targetWeek}`)
+  subtitle.font = Font.boldSystemFont(15)
+  subtitle.textColor = TEXT_DARK
   w.addSpacer(8)
 
-  if (family === "small" && weekOffset === 0) {
-    addSmallContent(w, todayCourses)
-  } else if (family === "small") {
-    // Small widget semaine suivante : résumé compact
-    addCompactWeek(w, allCourses, 4)
-  } else {
-    addWeekContent(w, allCourses, family === "large" ? 12 : 6)
+  // Group by day
+  const byDay = {}
+  const order = []
+  for (const c of allCourses) {
+    const p = parseDate(c.date)
+    if (!p) continue
+    if (!byDay[c.date]) {
+      byDay[c.date] = { parsed: p, tasks: [] }
+      order.push(c.date)
+    }
+    byDay[c.date].tasks.push(c)
+  }
+
+  if (order.length === 0) {
+    const m = w.addText("Pas de cours")
+    m.font = Font.systemFont(12)
+    m.textColor = TEXT_MUTED
+    return w
+  }
+
+  const max = family === "large" ? 7 : family === "small" ? 2 : 4
+  const shown = order.slice(0, max)
+
+  for (const key of shown) {
+    addDayRow(w, byDay[key], family)
+    w.addSpacer(2)
   }
 
   return w
 }
 
-function addSmallContent(w, courses) {
-  const label = w.addText("AUJOURD'HUI")
-  label.font = Font.boldSystemFont(9)
-  label.textColor = new Color("#ffe066")
-  w.addSpacer(4)
+function addDayRow(w, day, family) {
+  const row = w.addStack()
+  row.layoutHorizontally()
+  row.spacing = 0
+  row.cornerRadius = 4
 
-  if (courses.length === 0) {
-    const m = w.addText("Pas de cours ✅")
-    m.font = Font.systemFont(12)
-    m.textColor = Color.white()
-    return
-  }
+  // Day label (colored column)
+  const label = row.addStack()
+  label.backgroundColor = isWeekend(day.parsed.dayIdx) ? PURPLE : BLUE
+  label.setPadding(6, 8, 6, 8)
+  label.size = new Size(family === "small" ? 52 : 64, 0)
+  label.layoutVertically()
+  const dn = label.addText(day.parsed.dayName.toUpperCase())
+  dn.font = new Font("Menlo-Bold", 8)
+  dn.textColor = Color.white()
+  const dd = label.addText(String(day.parsed.day))
+  dd.font = Font.boldSystemFont(family === "small" ? 11 : 13)
+  dd.textColor = Color.white()
 
-  for (const c of courses.slice(0, 3)) {
-    const row = w.addStack()
-    row.layoutHorizontally()
-    row.spacing = 6
+  // Content column
+  const content = row.addStack()
+  content.backgroundColor = CARD_BG
+  content.setPadding(6, 10, 6, 10)
+  content.layoutVertically()
+  content.spacing = 2
 
-    const time = row.addText(c.time)
-    time.font = Font.boldSystemFont(11)
-    time.textColor = new Color("#ffe066")
+  const maxTasks = family === "small" ? 2 : family === "large" ? 5 : 3
+  for (const t of day.tasks.slice(0, maxTasks)) {
+    const tRow = content.addStack()
+    tRow.layoutHorizontally()
+    tRow.spacing = 6
 
-    const name = row.addText(c.matiere)
-    name.font = Font.systemFont(11)
-    name.textColor = Color.white()
-    name.lineLimit = 1
+    const dash = tRow.addText("—")
+    dash.font = Font.systemFont(10)
+    dash.textColor = TEXT_FAINT
 
-    w.addSpacer(3)
-  }
-}
-
-function addCompactWeek(w, courses, max) {
-  if (courses.length === 0) {
-    const m = w.addText("Pas de cours")
-    m.font = Font.systemFont(12)
-    m.textColor = Color.white()
-    return
-  }
-
-  for (const c of courses.slice(0, max)) {
-    const row = w.addStack()
-    row.layoutHorizontally()
-    row.spacing = 6
-
-    const dayAbbr = formatDayFr(c.date).split(" ")[0].slice(0, 3)
-    const tag = row.addText(dayAbbr)
-    tag.font = Font.boldSystemFont(10)
-    tag.textColor = new Color("#ffe066")
-
-    const time = row.addText(c.time)
-    time.font = Font.systemFont(10)
-    time.textColor = Color.white()
-
-    const name = row.addText(c.matiere)
-    name.font = Font.systemFont(10)
-    name.textColor = new Color("#ffffffcc")
-    name.lineLimit = 1
-
-    w.addSpacer(2)
-  }
-}
-
-function addWeekContent(w, courses, max) {
-  if (courses.length === 0) {
-    const m = w.addText("Pas de cours cette semaine")
-    m.font = Font.systemFont(13)
-    m.textColor = Color.white()
-    return
-  }
-
-  let currentDay = null
-  let count = 0
-
-  for (const c of courses) {
-    if (count >= max) break
-
-    if (c.date !== currentDay) {
-      currentDay = c.date
-      if (count > 0) w.addSpacer(10)
-      const dayLabel = w.addText("✨ " + formatDayFr(c.date))
-      dayLabel.font = Font.boldSystemFont(11)
-      dayLabel.textColor = new Color("#ffe066")
-      w.addSpacer(6)
-    }
-
-    const row = w.addStack()
-    row.layoutHorizontally()
-    row.spacing = 10
-
-    const time = row.addText(c.time)
-    time.font = Font.boldSystemFont(13)
-    time.textColor = Color.white()
-
-    const name = row.addText(c.matiere)
-    name.font = Font.systemFont(13)
-    name.textColor = new Color("#ffffffcc")
+    const name = tRow.addText(t.matiere)
+    name.font = Font.systemFont(family === "small" ? 10 : 12)
+    name.textColor = TEXT_DARK
     name.lineLimit = 1
     name.minimumScaleFactor = 0.7
-    row.addSpacer()
 
-    w.addSpacer(6)
-    count++
+    tRow.addSpacer()
+
+    const time = tRow.addText(t.time)
+    time.font = new Font("Menlo", family === "small" ? 8 : 9)
+    time.textColor = TEXT_MUTED
+  }
+
+  if (day.tasks.length > maxTasks) {
+    const more = content.addText(`+${day.tasks.length - maxTasks}`)
+    more.font = Font.systemFont(9)
+    more.textColor = TEXT_MUTED
   }
 }
 
