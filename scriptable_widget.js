@@ -220,6 +220,8 @@ function addWeekContent(w, courses, max) {
     name.font = Font.systemFont(13)
     name.textColor = new Color("#ffffffcc")
     name.lineLimit = 1
+    name.minimumScaleFactor = 0.7
+    row.addSpacer()
 
     w.addSpacer(6)
     count++
