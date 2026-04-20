@@ -73,6 +73,15 @@ function build(data, family, weekOffset) {
   const wk = header.addText(`S${targetWeek}`)
   wk.font = Font.boldMonospacedSystemFont(9)
 
+  w.addSpacer(2)
+  const ts = new Date(data.timestamp)
+  const tsStr = ts.toLocaleString("fr-FR", {
+    day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit"
+  })
+  const updated = w.addText(`maj ${tsStr}`)
+  updated.font = Font.monospacedSystemFont(8)
+  updated.textOpacity = 0.6
+
   w.addSpacer(8)
 
   // Group by day
