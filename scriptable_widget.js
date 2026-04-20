@@ -1,10 +1,28 @@
 // Planning Widget - Scriptable
 // Paramètre widget: "1" = semaine courante, "2" = semaine suivante
+
 const JSON_URL = "https://wiscod.github.io/Planning-semaine/planning.json"
+const REFRESH_INTERVAL = 60 * 60 * 1000 // 1 heure
 
 const MONTHS_EN = ["january","february","march","april","may","june",
                    "july","august","september","october","november","december"]
 const DAYS_FR = ["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"]
+
+const dateCache = {}
+
+function parseDate(dateStr) {
+  if (dateCache[dateStr]) return dateCache[dateStr]
+
+  const parts = dateStr.toLowerCase().split(" ")
+  if (parts.length < 2) return null
+  const day = parseInt(parts[0])
+  const monthIdx = MONTHS_EN.indexOf(parts[1])
+  if (monthIdx < 0) return null
+  const d = new Date(new Date().getFullYear(), monthIdx, day)
+  const result = { day, monthIdx, dayIdx: d.getDay(), dayName: DAYS_FR[d.getDay()] }
+  dateCache[dateStr] = result
+  return result
+}
 
 async function main() {
   const weekOffset = parseInt(args.widgetParameter) === 2 ? 1 : 0
@@ -12,7 +30,7 @@ async function main() {
   const family = config.widgetFamily || "medium"
   const widget = data ? build(data, family, weekOffset) : buildError()
 
-  widget.refreshAfterDate = new Date(Date.now() + 60 * 60 * 1000)
+  widget.refreshAfterDate = new Date(Date.now() + REFRESH_INTERVAL)
   widget.url = "https://wiscod.github.io/Planning-semaine/"
   Script.setWidget(widget)
 
@@ -38,15 +56,6 @@ function getISOWeek() {
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 }
 
-function parseDate(dateStr) {
-  const parts = dateStr.toLowerCase().split(" ")
-  if (parts.length < 2) return null
-  const day = parseInt(parts[0])
-  const monthIdx = MONTHS_EN.indexOf(parts[1])
-  if (monthIdx < 0) return null
-  const d = new Date(new Date().getFullYear(), monthIdx, day)
-  return { day, dayIdx: d.getDay(), dayName: DAYS_FR[d.getDay()] }
-}
 
 function buildError() {
   const w = new ListWidget()
@@ -87,9 +96,12 @@ function build(data, family, weekOffset) {
   const byDay = {}
   const order = []
   for (const c of courses) {
-    const p = parseDate(c.date)
-    if (!p) continue
-    if (!byDay[c.date]) { byDay[c.date] = { parsed: p, tasks: [] }; order.push(c.date) }
+    if (!byDay[c.date]) {
+      const p = parseDate(c.date)
+      if (!p) continue
+      byDay[c.date] = { parsed: p, tasks: [] }
+      order.push(c.date)
+    }
     byDay[c.date].tasks.push(c)
   }
 

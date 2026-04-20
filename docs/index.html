@@ -106,6 +106,15 @@
   .samedi .day-label, .dimanche .day-label { background: #9b8ec4; }
 
   .error { color: #a55; font-size: 14px; }
+
+  .day-date-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #999;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
 </style>
 </head>
 <body>
@@ -121,13 +130,18 @@
   const DAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
   const ORDER = ["lundi","mardi","mercredi","jeudi","vendredi","samedi","dimanche"];
 
+  const dateCache = {};
+
   function parseDate(dateStr) {
+    if (dateCache[dateStr]) return dateCache[dateStr];
     const parts = dateStr.toLowerCase().split(" ");
     const day = parseInt(parts[0]);
     const monthIdx = MONTHS_EN.indexOf(parts[1]);
     if (monthIdx < 0) return null;
     const year = new Date().getFullYear();
-    return { day, monthIdx, dayName: DAYS[new Date(year, monthIdx, day).getDay()] };
+    const result = { day, monthIdx, dayName: DAYS[new Date(year, monthIdx, day).getDay()] };
+    dateCache[dateStr] = result;
+    return result;
   }
 
   function fmtDayLabel(p) {
@@ -158,24 +172,57 @@
 
         const block = document.createElement('div');
         block.className = 'week-block';
-        let html = `<div class="week-range">Semaine ${week.semaine}</div><div class="planning">`;
+
+        const title = document.createElement('div');
+        title.className = 'week-range';
+        title.textContent = `Semaine ${week.semaine}`;
+        block.appendChild(title);
+
+        const planning = document.createElement('div');
+        planning.className = 'planning';
 
         for (const day of ORDER) {
           const d = byDay[day];
-          html += `<div class="day-row ${day}"><div class="day-label">${day}</div><div class="day-content">`;
+          const dayRow = document.createElement('div');
+          dayRow.className = `day-row ${day}`;
+
+          const label = document.createElement('div');
+          label.className = 'day-label';
+          label.textContent = day;
+          dayRow.appendChild(label);
+
+          const content = document.createElement('div');
+          content.className = 'day-content';
+
           if (d) {
-            html += `<div style="font-family:'DM Mono',monospace;font-size:10px;color:#999;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.1em;">${d.label}</div>`;
+            const dateLabel = document.createElement('div');
+            dateLabel.className = 'day-date-label';
+            dateLabel.textContent = d.label;
+            content.appendChild(dateLabel);
+
             for (const t of d.tasks) {
-              html += `<div class="task">${t.matiere}<span class="task-start">début ${t.time}</span></div>`;
+              const task = document.createElement('div');
+              task.className = 'task';
+              const matiere = document.createTextNode(t.matiere);
+              const time = document.createElement('span');
+              time.className = 'task-start';
+              time.textContent = `début ${t.time}`;
+              task.appendChild(matiere);
+              task.appendChild(time);
+              content.appendChild(task);
             }
           } else {
-            html += `<div class="empty">—</div>`;
+            const empty = document.createElement('div');
+            empty.className = 'empty';
+            empty.textContent = '—';
+            content.appendChild(empty);
           }
-          html += `</div></div>`;
+
+          dayRow.appendChild(content);
+          planning.appendChild(dayRow);
         }
 
-        html += `</div>`;
-        block.innerHTML = html;
+        block.appendChild(planning);
         weeksEl.appendChild(block);
       }
     } catch (e) {

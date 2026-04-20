@@ -66,7 +66,7 @@ def parse_ics_file(ics_content: str) -> dict:
                         'matiere': summary.split(' - ')[0].strip() if ' - ' in summary else summary,
                     })
 
-        # Trier par date
+        # Trier par date (au cas où la source ne serait pas ordonnée)
         for week in courses_by_week:
             courses_by_week[week].sort(key=lambda x: x['date_obj'])
 
@@ -154,29 +154,27 @@ async def get_courses_from_scraping():
         return None
 
 
+def generate_jours_map() -> dict:
+    """Génère la map jour/date dynamiquement."""
+    MONTHS_EN = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+    MONTHS_FR = ["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN","JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"]
+    DAYS_FR = ["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"]
+
+    jours_map = {}
+    year = datetime.now().year
+    for month in range(12):
+        days_in_month = (datetime(year, month + 1 if month < 11 else 12, 1) - timedelta(days=1)).day if month < 11 else 31
+        for day in range(1, days_in_month + 1):
+            d = datetime(year, month + 1, day)
+            date_key = f"{day} {MONTHS_EN[month]}".lower()
+            day_name = DAYS_FR[d.weekday() if d.weekday() < 7 else 6]
+            jours_map[date_key] = f"{day_name} {day} {MONTHS_FR[month]}"
+    return jours_map
+
+
 def format_planning_whatsapp(courses_by_week: dict, week_current: int, week_next: int) -> str:
     """Formate 2 semaines pour WhatsApp."""
-    jours_map = {
-        "13 april": "LUNDI 13 AVRIL",
-        "14 april": "MARDI 14 AVRIL",
-        "15 april": "MERCREDI 15 AVRIL",
-        "16 april": "JEUDI 16 AVRIL",
-        "17 april": "VENDREDI 17 AVRIL",
-        "20 april": "LUNDI 20 AVRIL",
-        "21 april": "MARDI 21 AVRIL",
-        "22 april": "MERCREDI 22 AVRIL",
-        "23 april": "JEUDI 23 AVRIL",
-        "24 april": "VENDREDI 24 AVRIL",
-        "27 april": "LUNDI 27 AVRIL",
-        "28 april": "MARDI 28 AVRIL",
-        "29 april": "MERCREDI 29 AVRIL",
-        "30 april": "JEUDI 30 AVRIL",
-        "1 may": "VENDREDI 1 MAI",
-        "2 may": "SAMEDI 2 MAI",
-        "3 may": "DIMANCHE 3 MAI",
-        "4 may": "LUNDI 4 MAI",
-        "5 may": "MARDI 5 MAI",
-    }
+    jours_map = generate_jours_map()
 
     message = "📅 *VOTRE PLANNING*\n\n"
 
@@ -268,12 +266,14 @@ async def main():
     week_current, week_next = get_current_and_next_week()
     print(f"\nSemaine en cours: {week_current}, Semaine suivante: {week_next}")
 
-    print("\n1️⃣ Tentative ICS...")
-    courses_by_week = await get_courses_from_ics()
+    print("\n1️⃣ Tentative ICS et scraping en parallèle...")
+    ics_task = asyncio.create_task(get_courses_from_ics())
+    scrape_task = asyncio.create_task(get_courses_from_scraping())
 
+    courses_by_week = await ics_task
     if not courses_by_week:
-        print("2️⃣ Fallback scraping...")
-        courses_by_week = await get_courses_from_scraping()
+        print("2️⃣ ICS échoué, utilisation du scraping...")
+        courses_by_week = await scrape_task
 
     if not courses_by_week:
         print("❌ Impossible de récupérer les cours")
