@@ -1,45 +1,25 @@
-// Planning Widget - Scriptable (image-rendered, survit au mode transparent iOS)
+// Planning Widget - Scriptable (texte pur, compatible mode transparent iOS)
 // Paramètre widget: "1" = semaine courante, "2" = semaine suivante
 const JSON_URL = "https://wiscod.github.io/Planning-semaine/planning.json"
 
 const MONTHS_EN = ["january","february","march","april","may","june",
                    "july","august","september","october","november","december"]
-const DAYS_FR = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]
-
-const BG = new Color("#f5f4f0")
-const CARD_BG = new Color("#ffffff")
-const BORDER = new Color("#ebebeb")
-const TEXT_DARK = new Color("#2a2a2a")
-const TEXT_MUTED = new Color("#999999")
-const TEXT_FAINT = new Color("#bbbbbb")
-const BLUE = new Color("#7c9cbf")
-const PURPLE = new Color("#9b8ec4")
+const DAYS_FR = ["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"]
 
 async function main() {
   const weekOffset = parseInt(args.widgetParameter) === 2 ? 1 : 0
   const data = await fetchData()
   const family = config.widgetFamily || "medium"
-  const widget = new ListWidget()
-  widget.url = "https://wiscod.github.io/Planning-semaine/"
+  const widget = data ? build(data, family, weekOffset) : buildError()
+
   widget.refreshAfterDate = new Date(Date.now() + 60 * 60 * 1000)
-
-  const size = widgetSize(family)
-  const img = data ? renderImage(data, weekOffset, size) : renderError(size)
-  widget.backgroundImage = img
-  widget.backgroundColor = BG
-
+  widget.url = "https://wiscod.github.io/Planning-semaine/"
   Script.setWidget(widget)
+
   if (config.runsInWidget) Script.complete()
   else if (family === "small") await widget.presentSmall()
   else if (family === "large") await widget.presentLarge()
   else await widget.presentMedium()
-}
-
-function widgetSize(family) {
-  // Tailles approximatives en points ×3 pour la résolution
-  if (family === "small") return { w: 465, h: 465 }
-  if (family === "large") return { w: 987, h: 1035 }
-  return { w: 987, h: 465 }
 }
 
 async function fetchData() {
@@ -65,51 +45,37 @@ function parseDate(dateStr) {
   const monthIdx = MONTHS_EN.indexOf(parts[1])
   if (monthIdx < 0) return null
   const d = new Date(new Date().getFullYear(), monthIdx, day)
-  return { day, monthIdx, dayIdx: d.getDay(), dayName: DAYS_FR[d.getDay()] }
+  return { day, dayIdx: d.getDay(), dayName: DAYS_FR[d.getDay()] }
 }
 
-function renderError(size) {
-  const ctx = new DrawContext()
-  ctx.size = new Size(size.w, size.h)
-  ctx.opaque = true
-  ctx.respectScreenScale = true
-  ctx.setFillColor(BG)
-  ctx.fillRect(new Rect(0, 0, size.w, size.h))
-  ctx.setTextColor(TEXT_DARK)
-  ctx.setFont(Font.systemFont(28))
-  ctx.drawText("Erreur réseau", new Point(40, 40))
-  return ctx.getImage()
+function buildError() {
+  const w = new ListWidget()
+  const t = w.addText("Erreur réseau")
+  t.font = Font.systemFont(13)
+  return w
 }
 
-function renderImage(data, weekOffset, size) {
+function build(data, family, weekOffset) {
+  const w = new ListWidget()
+  w.setPadding(12, 14, 12, 14)
+
   const currentWeek = getISOWeek()
   const targetWeek = currentWeek + weekOffset
   const weekData = data.weeks[String(targetWeek)]
   const courses = weekData ? weekData.courses : []
 
-  const ctx = new DrawContext()
-  ctx.size = new Size(size.w, size.h)
-  ctx.opaque = true
-  ctx.respectScreenScale = true
-
-  // Fond global
-  ctx.setFillColor(BG)
-  ctx.fillRect(new Rect(0, 0, size.w, size.h))
-
-  const pad = 36
-  let y = pad
-
   // Header
-  ctx.setTextColor(TEXT_MUTED)
-  ctx.setFont(Font.boldMonospacedSystemFont(22))
-  ctx.drawText((weekOffset === 0 ? "CETTE SEMAINE" : "SEMAINE PROCHAINE"), new Point(pad, y))
-  y += 30
-  ctx.setTextColor(TEXT_DARK)
-  ctx.setFont(Font.boldSystemFont(38))
-  ctx.drawText(`Semaine ${targetWeek}`, new Point(pad, y))
-  y += 56
+  const header = w.addStack()
+  header.layoutHorizontally()
+  const title = header.addText(weekOffset === 0 ? "CETTE SEMAINE" : "SEMAINE PROCHAINE")
+  title.font = Font.boldMonospacedSystemFont(9)
+  header.addSpacer()
+  const wk = header.addText(`S${targetWeek}`)
+  wk.font = Font.boldMonospacedSystemFont(9)
 
-  // Group by day (date string)
+  w.addSpacer(8)
+
+  // Group by day
   const byDay = {}
   const order = []
   for (const c of courses) {
@@ -120,104 +86,52 @@ function renderImage(data, weekOffset, size) {
   }
 
   if (order.length === 0) {
-    ctx.setTextColor(TEXT_MUTED)
-    ctx.setFont(Font.systemFont(26))
-    ctx.drawText("Pas de cours", new Point(pad, y))
-    return ctx.getImage()
+    const m = w.addText("Pas de cours")
+    m.font = Font.systemFont(12)
+    return w
   }
 
-  const isSmall = size.w < 600
-  const isLarge = size.h > 700
-  const maxDays = isLarge ? 7 : isSmall ? 3 : 4
-  const contentW = size.w - pad * 2
-  const labelW = isSmall ? 90 : 130
-  const rowGap = 6
-  const rowH = isLarge ? 110 : isSmall ? 80 : 95
+  const maxDays = family === "large" ? 7 : family === "small" ? 2 : 4
+  const maxTasksPerDay = family === "small" ? 2 : 3
+  const dayFont = family === "small" ? 9 : 10
+  const taskFont = family === "small" ? 10 : 12
+  const timeFont = family === "small" ? 9 : 10
 
   for (const key of order.slice(0, maxDays)) {
     const day = byDay[key]
-    drawDayRow(ctx, pad, y, contentW, rowH, labelW, day, isSmall)
-    y += rowH + rowGap
-    if (y + rowH > size.h - pad) break
+
+    const dayLabel = w.addText(`${day.parsed.dayName} ${day.parsed.day}`)
+    dayLabel.font = Font.boldMonospacedSystemFont(dayFont)
+
+    w.addSpacer(3)
+
+    for (const t of day.tasks.slice(0, maxTasksPerDay)) {
+      const row = w.addStack()
+      row.layoutHorizontally()
+      row.spacing = 8
+
+      const time = row.addText(t.time)
+      time.font = Font.monospacedSystemFont(timeFont)
+
+      const name = row.addText(t.matiere)
+      name.font = Font.systemFont(taskFont)
+      name.lineLimit = 1
+      name.minimumScaleFactor = 0.7
+
+      row.addSpacer()
+
+      w.addSpacer(2)
+    }
+
+    if (day.tasks.length > maxTasksPerDay) {
+      const more = w.addText(`  +${day.tasks.length - maxTasksPerDay}`)
+      more.font = Font.systemFont(9)
+    }
+
+    w.addSpacer(6)
   }
 
-  return ctx.getImage()
-}
-
-function drawDayRow(ctx, x, y, totalW, h, labelW, day, isSmall) {
-  const isWeekend = day.parsed.dayIdx === 0 || day.parsed.dayIdx === 6
-  const labelColor = isWeekend ? PURPLE : BLUE
-  const radius = 8
-
-  // Label (colonne gauche)
-  ctx.setFillColor(labelColor)
-  drawRoundedRect(ctx, x, y, labelW, h, radius, "left")
-
-  ctx.setTextColor(Color.white())
-  ctx.setFont(Font.boldMonospacedSystemFont(isSmall ? 16 : 19))
-  ctx.drawText(day.parsed.dayName.toUpperCase().slice(0, isSmall ? 3 : 8), new Point(x + 12, y + 14))
-  ctx.setFont(Font.boldSystemFont(isSmall ? 28 : 34))
-  ctx.drawText(String(day.parsed.day), new Point(x + 12, y + (isSmall ? 38 : 42)))
-
-  // Card (colonne droite)
-  const cx = x + labelW
-  const cw = totalW - labelW
-  ctx.setFillColor(CARD_BG)
-  drawRoundedRect(ctx, cx, y, cw, h, radius, "right")
-
-  // Tasks
-  const maxTasks = isSmall ? 2 : 3
-  let ty = y + 14
-  const lineH = isSmall ? 26 : 30
-  for (const t of day.tasks.slice(0, maxTasks)) {
-    ctx.setTextColor(TEXT_FAINT)
-    ctx.setFont(Font.systemFont(isSmall ? 16 : 18))
-    ctx.drawText("—", new Point(cx + 14, ty))
-
-    ctx.setTextColor(TEXT_DARK)
-    ctx.setFont(Font.systemFont(isSmall ? 16 : 19))
-    const maxChars = isSmall ? 18 : 30
-    const name = t.matiere.length > maxChars ? t.matiere.slice(0, maxChars - 1) + "…" : t.matiere
-    ctx.drawText(name, new Point(cx + 36, ty))
-
-    ctx.setTextColor(TEXT_MUTED)
-    ctx.setFont(Font.monospacedSystemFont(isSmall ? 13 : 15))
-    const timeW = 70
-    ctx.drawText(t.time, new Point(cx + cw - timeW - 12, ty + 2))
-
-    ty += lineH
-  }
-  if (day.tasks.length > maxTasks) {
-    ctx.setTextColor(TEXT_MUTED)
-    ctx.setFont(Font.systemFont(isSmall ? 13 : 15))
-    ctx.drawText(`+${day.tasks.length - maxTasks}`, new Point(cx + 14, ty))
-  }
-}
-
-function drawRoundedRect(ctx, x, y, w, h, r, side) {
-  // side: "left" = coins arrondis à gauche, "right" = à droite, sinon tout
-  const path = new Path()
-  if (side === "left") {
-    path.move(new Point(x + r, y))
-    path.addLine(new Point(x + w, y))
-    path.addLine(new Point(x + w, y + h))
-    path.addLine(new Point(x + r, y + h))
-    path.addQuadCurve(new Point(x, y + h - r), new Point(x, y + h))
-    path.addLine(new Point(x, y + r))
-    path.addQuadCurve(new Point(x + r, y), new Point(x, y))
-  } else if (side === "right") {
-    path.move(new Point(x, y))
-    path.addLine(new Point(x + w - r, y))
-    path.addQuadCurve(new Point(x + w, y + r), new Point(x + w, y))
-    path.addLine(new Point(x + w, y + h - r))
-    path.addQuadCurve(new Point(x + w - r, y + h), new Point(x + w, y + h))
-    path.addLine(new Point(x, y + h))
-    path.closeSubpath()
-  } else {
-    path.addRoundedRect(new Rect(x, y, w, h), r, r)
-  }
-  ctx.addPath(path)
-  ctx.fillPath()
+  return w
 }
 
 await main()
