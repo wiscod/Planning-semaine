@@ -3,6 +3,7 @@ name: Send Planning WhatsApp
 on:
   schedule:
     - cron: '0 5 * * *'    # 7:00 CEST
+    - cron: '0 8 * * *'    # 10:00 CEST
     - cron: '0 11 * * *'   # 13:00 CEST
     - cron: '0 15 * * *'   # 17:00 CEST
     - cron: '0 21 * * *'   # 23:00 CEST

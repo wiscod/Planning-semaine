@@ -95,6 +95,7 @@ async def get_courses_from_scraping():
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             page = await browser.new_page()
+            page.set_default_timeout(30000)
 
             await page.goto(HYPERPLANNING_URL)
             await page.wait_for_load_state("networkidle")
@@ -266,14 +267,11 @@ async def main():
     week_current, week_next = get_current_and_next_week()
     print(f"\nSemaine en cours: {week_current}, Semaine suivante: {week_next}")
 
-    print("\n1️⃣ Tentative ICS et scraping en parallèle...")
-    ics_task = asyncio.create_task(get_courses_from_ics())
-    scrape_task = asyncio.create_task(get_courses_from_scraping())
-
-    courses_by_week = await ics_task
+    print("\n1️⃣ Tentative ICS...")
+    courses_by_week = await get_courses_from_ics()
     if not courses_by_week:
         print("2️⃣ ICS échoué, utilisation du scraping...")
-        courses_by_week = await scrape_task
+        courses_by_week = await get_courses_from_scraping()
 
     if not courses_by_week:
         print("❌ Impossible de récupérer les cours")
