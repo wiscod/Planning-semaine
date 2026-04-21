@@ -164,7 +164,7 @@ def generate_jours_map() -> dict:
     jours_map = {}
     year = datetime.now().year
     for month in range(12):
-        days_in_month = (datetime(year, month + 1 if month < 11 else 12, 1) - timedelta(days=1)).day if month < 11 else 31
+        days_in_month = (datetime(year, month + 2, 1) - timedelta(days=1)).day if month < 11 else 31
         for day in range(1, days_in_month + 1):
             d = datetime(year, month + 1, day)
             date_key = f"{day} {MONTHS_EN[month]}".lower()
