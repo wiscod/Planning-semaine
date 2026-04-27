@@ -1,31 +1,6 @@
 {
-  "timestamp": "2026-04-26T21:13:40.099615",
+  "timestamp": "2026-04-27T06:01:06.029806",
   "weeks": {
-    "17": {
-      "semaine": 17,
-      "courses": [
-        {
-          "date": "20 april",
-          "time": "10:00",
-          "matiere": "Hiring strategy"
-        },
-        {
-          "date": "22 april",
-          "time": "09:30",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "22 april",
-          "time": "14:00",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "23 april",
-          "time": "10:00",
-          "matiere": "Hiring strategy"
-        }
-      ]
-    },
     "18": {
       "semaine": 18,
       "courses": [
@@ -52,6 +27,31 @@
         {
           "date": "01 may",
           "time": "2026-05-01",
+          "matiere": "Férié"
+        }
+      ]
+    },
+    "19": {
+      "semaine": 19,
+      "courses": [
+        {
+          "date": "05 may",
+          "time": "09:30",
+          "matiere": "Start-up & IT"
+        },
+        {
+          "date": "05 may",
+          "time": "14:00",
+          "matiere": "Start-up & IT"
+        },
+        {
+          "date": "06 may",
+          "time": "09:30",
+          "matiere": "Annulation : Start-up & IT"
+        },
+        {
+          "date": "08 may",
+          "time": "2026-05-08",
           "matiere": "Férié"
         }
       ]
