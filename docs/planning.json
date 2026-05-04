@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-04T06:02:07.487409",
+  "timestamp": "2026-05-04T08:48:02.502982",
   "weeks": {
     "19": {
       "semaine": 19,
@@ -12,6 +12,16 @@
         {
           "date": "05 may",
           "time": "14:00",
+          "matiere": "Start-up & IT"
+        },
+        {
+          "date": "06 may",
+          "time": "09:30",
+          "matiere": "Start-up & IT"
+        },
+        {
+          "date": "06 may",
+          "time": "14:30",
           "matiere": "Start-up & IT"
         },
         {
