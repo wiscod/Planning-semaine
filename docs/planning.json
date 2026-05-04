@@ -1,36 +1,6 @@
 {
-  "timestamp": "2026-05-03T21:17:06.878205",
+  "timestamp": "2026-05-04T06:02:07.487409",
   "weeks": {
-    "18": {
-      "semaine": 18,
-      "courses": [
-        {
-          "date": "27 april",
-          "time": "10:00",
-          "matiere": "Hiring strategy"
-        },
-        {
-          "date": "29 april",
-          "time": "09:30",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "29 april",
-          "time": "14:00",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "30 april",
-          "time": "10:00",
-          "matiere": "Hiring strategy"
-        },
-        {
-          "date": "01 may",
-          "time": "2026-05-01",
-          "matiere": "Férié"
-        }
-      ]
-    },
     "19": {
       "semaine": 19,
       "courses": [
@@ -52,6 +22,46 @@
         {
           "date": "08 may",
           "time": "2026-05-08",
+          "matiere": "Férié"
+        }
+      ]
+    },
+    "20": {
+      "semaine": 20,
+      "courses": [
+        {
+          "date": "11 may",
+          "time": "09:30",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "11 may",
+          "time": "14:00",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "12 may",
+          "time": "09:30",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "12 may",
+          "time": "14:00",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "13 may",
+          "time": "09:30",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "13 may",
+          "time": "14:00",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "14 may",
+          "time": "2026-05-14",
           "matiere": "Férié"
         }
       ]
