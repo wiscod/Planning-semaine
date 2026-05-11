@@ -1,31 +1,6 @@
 {
-  "timestamp": "2026-05-10T21:18:48.446505",
+  "timestamp": "2026-05-11T06:16:26.012804",
   "weeks": {
-    "19": {
-      "semaine": 19,
-      "courses": [
-        {
-          "date": "05 may",
-          "time": "09:30",
-          "matiere": "Start-up & IT"
-        },
-        {
-          "date": "05 may",
-          "time": "14:00",
-          "matiere": "Start-up & IT"
-        },
-        {
-          "date": "06 may",
-          "time": "09:30",
-          "matiere": "Annulation : Start-up & IT"
-        },
-        {
-          "date": "08 may",
-          "time": "2026-05-08",
-          "matiere": "Férié"
-        }
-      ]
-    },
     "20": {
       "semaine": 20,
       "courses": [
@@ -63,6 +38,26 @@
           "date": "14 may",
           "time": "2026-05-14",
           "matiere": "Férié"
+        }
+      ]
+    },
+    "21": {
+      "semaine": 21,
+      "courses": [
+        {
+          "date": "20 may",
+          "time": "09:30",
+          "matiere": "DataOps & Data Storage"
+        },
+        {
+          "date": "20 may",
+          "time": "14:00",
+          "matiere": "DataOps & Data Storage"
+        },
+        {
+          "date": "24 may",
+          "time": "2026-05-24",
+          "matiere": "Vacances"
         }
       ]
     }
