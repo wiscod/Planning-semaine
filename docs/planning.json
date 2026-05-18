@@ -1,46 +1,6 @@
 {
-  "timestamp": "2026-05-17T21:20:02.134967",
+  "timestamp": "2026-05-18T06:26:30.930161",
   "weeks": {
-    "20": {
-      "semaine": 20,
-      "courses": [
-        {
-          "date": "11 may",
-          "time": "09:30",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "11 may",
-          "time": "14:00",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "12 may",
-          "time": "09:30",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "12 may",
-          "time": "14:00",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "13 may",
-          "time": "09:30",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "13 may",
-          "time": "14:00",
-          "matiere": "Industries Cursus"
-        },
-        {
-          "date": "14 may",
-          "time": "2026-05-14",
-          "matiere": "Férié"
-        }
-      ]
-    },
     "21": {
       "semaine": 21,
       "courses": [
@@ -58,6 +18,21 @@
           "date": "24 may",
           "time": "2026-05-24",
           "matiere": "Vacances"
+        }
+      ]
+    },
+    "22": {
+      "semaine": 22,
+      "courses": [
+        {
+          "date": "27 may",
+          "time": "09:30",
+          "matiere": "DataOps & Data Storage"
+        },
+        {
+          "date": "27 may",
+          "time": "14:00",
+          "matiere": "DataOps & Data Storage"
         }
       ]
     }
