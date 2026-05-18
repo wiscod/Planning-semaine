@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-18T12:12:40.115944",
+  "timestamp": "2026-05-18T16:08:56.614204",
   "weeks": {
     "21": {
       "semaine": 21,
@@ -13,6 +13,21 @@
           "date": "20 may",
           "time": "14:00",
           "matiere": "DataOps & Data Storage"
+        },
+        {
+          "date": "21 may",
+          "time": "09:30",
+          "matiere": "Rattrapage"
+        },
+        {
+          "date": "21 may",
+          "time": "14:00",
+          "matiere": "Rattrapage"
+        },
+        {
+          "date": "22 may",
+          "time": "10:00",
+          "matiere": "Hiring strategy"
         },
         {
           "date": "24 may",
@@ -33,6 +48,11 @@
           "date": "27 may",
           "time": "14:00",
           "matiere": "DataOps & Data Storage"
+        },
+        {
+          "date": "29 may",
+          "time": "10:00",
+          "matiere": "Hiring strategy"
         }
       ]
     }
