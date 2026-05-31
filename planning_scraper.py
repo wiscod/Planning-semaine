@@ -106,7 +106,10 @@ async def get_courses_from_scraping():
 
             await page.get_by_placeholder("Saisissez votre identifiant.").fill(USERNAME)
             await page.get_by_placeholder("Saisissez votre mot de passe.").fill(PASSWORD)
-            await page.get_by_role("button", name="Se connecter").click()
+            
+            # Wait for any blocking overlay to disappear, or force click
+            await page.get_by_role("button", name="Se connecter").click(force=True)
+            await page.wait_for_load_state("networkidle")
             await page.wait_for_load_state("networkidle")
 
             await page.evaluate("""
