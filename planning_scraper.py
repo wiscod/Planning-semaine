@@ -130,8 +130,8 @@ async def get_courses_from_scraping():
                 () => {
                     const items = document.querySelectorAll('[role="menuitem"]');
                     const planning = Array.from(items).find(el =>
-                        el.getAttribute('aria-label') === 'en planning' ||
-                        el.textContent.trim() === 'en planning'
+                        el.getAttribute('aria-label') === 'en liste' ||
+                        el.textContent.trim() === 'en liste'
                     );
                     if (planning) planning.click();
                 }
