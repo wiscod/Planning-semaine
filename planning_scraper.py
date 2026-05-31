@@ -136,6 +136,12 @@ async def get_courses_from_scraping():
             await page.wait_for_timeout(3000)
 
             content = await page.inner_text("body")
+            
+            # Save content for debugging
+            os.makedirs("docs", exist_ok=True)
+            with open("docs/debug_content.txt", "w", encoding="utf-8") as f:
+                f.write(content)
+
             await browser.close()
 
             courses_by_week = {}
@@ -336,6 +342,8 @@ async def main():
         subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
         subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
         subprocess.run(['git', 'add', 'docs/planning.json'], check=True)
+        # Also add debug_content if it exists
+        subprocess.run('git add docs/debug_content.txt || true', shell=True)
         subprocess.run(['git', 'commit', '-m', 'Update planning.json'], check=True)
         subprocess.run(['git', 'push'], check=True)
         print("✅ planning.json poussé vers GitHub")
