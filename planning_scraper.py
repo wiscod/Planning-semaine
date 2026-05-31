@@ -148,43 +148,71 @@ async def get_courses_from_scraping():
             await browser.close()
 
             courses_by_week = {}
-            pattern = re.compile(
-                r'Cours du (\d+ \w+) de (\d+ heures \d+) à (\d+ heures \d+)\n(.+?)\n',
-                re.DOTALL
-            )
-            
             mois_fr = {
                 'janvier': 1, 'février': 2, 'fevrier': 2, 'mars': 3, 'avril': 4,
                 'mai': 5, 'juin': 6, 'juillet': 7, 'août': 8, 'aout': 8,
-                'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12,
-                'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
-                'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
+                'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12
             }
+            
+            current_date_str = None
+            current_time = None
+            current_subject = None
 
-            for match in pattern.finditer(content):
-                date_str = match.group(1)
-                time_str = match.group(2).split()[0] + "h" + match.group(2).split()[2]
-                matiere = match.group(4).strip()
+            for line in content.split('\n'):
+                line = line.strip()
+                if not line:
+                    continue
 
-                try:
-                    parts = date_str.split()
-                    day = int(parts[0])
-                    month = mois_fr.get(parts[1].lower(), datetime.now().month)
-                    year = datetime.now().year
+                # Détecter la date: "mercredi 3 juin 2026"
+                if re.match(r'^(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\s+(\d+\s+\w+)\s+\d{4}$', line, re.IGNORECASE):
+                    match_date = re.search(r'\d+\s+\w+', line)
+                    if match_date:
+                        current_date_str = match_date.group(0) # "3 juin"
+                    current_time = None
+                    current_subject = None
+                    continue
+
+                # Détecter l'heure: "09h30 - 13h00"
+                time_match = re.match(r'^(\d{2}h\d{2})\s*-\s*(\d{2}h\d{2})$', line)
+                if time_match:
+                    current_time = time_match.groups() # ("09h30", "13h00")
+                    current_subject = None
+                    continue
+                
+                # La première ligne de texte après l'heure est le sujet du cours
+                if current_date_str and current_time and not current_subject:
+                    # Ignorer des mots clés si ce n'est pas le cours
+                    if line in ["Cours", "TD", "TP", "Examen"] or "Non plac" in line or "Semaine" in line:
+                        continue
+                    current_subject = line
                     
-                    if datetime.now().month >= 9 and month < 8:
-                        year += 1
+                    # On a tout, on sauvegarde le cours !
+                    try:
+                        day_str, month_str = current_date_str.split()
+                        month_num = mois_fr.get(month_str.lower(), 1)
+                        now = datetime.now()
+                        year = now.year
+                        # Gestion de l'année
+                        if month_num < 8 and now.month >= 8:
+                            year += 1
+                        elif month_num >= 8 and now.month < 8:
+                            year -= 1
+                            
+                        course_date = datetime(year, month_num, int(day_str))
+                        week = course_date.isocalendar()[1]
                         
-                    date_obj = datetime(year, month, day)
-                    week = date_obj.isocalendar()[1]
-                except Exception:
-                    week = datetime.now().isocalendar()[1]
-
-                courses_by_week.setdefault(week, []).append({
-                    'date': date_str,
-                    'time': time_str,
-                    'matiere': matiere,
-                })
+                        start_time = current_time[0].replace('h', ':')
+                        end_time = current_time[1].replace('h', ':')
+                        
+                        course = {
+                            "date": current_date_str,
+                            "time": f"{start_time}-{end_time}",
+                            "matiere": current_subject,
+                        }
+                        
+                        courses_by_week.setdefault(week, []).append(course)
+                    except Exception as e:
+                        print(f"Erreur parsing cours: {e}")
 
             return courses_by_week
     except Exception as e:
