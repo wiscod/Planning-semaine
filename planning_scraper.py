@@ -149,7 +149,8 @@ async def get_courses_from_scraping():
                 'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
             }
 
-            for _ in range(3):
+            for i in range(3):
+                await page.screenshot(path=f"docs/debug_week{i}.png", full_page=True)
                 content = await page.inner_text("body")
                 for match in pattern.finditer(content):
                     date_str = match.group(1)
@@ -361,8 +362,8 @@ async def main():
     try:
         subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
         subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
-        subprocess.run(['git', 'add', 'docs/planning.json'], check=True)
-        subprocess.run(['git', 'commit', '-m', 'Update planning.json'], check=True)
+        subprocess.run(['git', 'add', 'docs/'], check=True)
+        subprocess.run(['git', 'commit', '-m', 'Update planning and debug screenshots'], check=True)
         subprocess.run(['git', 'push'], check=True)
         print("✅ planning.json poussé vers GitHub")
     except Exception as e:
