@@ -1,4 +1,30 @@
 {
-  "timestamp": "2026-05-31T22:19:25.446114",
-  "weeks": {}
+  "timestamp": "2026-05-31T22:23:42.026089",
+  "weeks": {
+    "23": {
+      "semaine": 23,
+      "courses": [
+        {
+          "date": "3 juin",
+          "time": "9h30",
+          "matiere": "Cours"
+        },
+        {
+          "date": "3 juin",
+          "time": "14h00",
+          "matiere": "Cours"
+        },
+        {
+          "date": "5 juin",
+          "time": "9h30",
+          "matiere": "Cours"
+        },
+        {
+          "date": "5 juin",
+          "time": "14h00",
+          "matiere": "Cours"
+        }
+      ]
+    }
+  }
 }
