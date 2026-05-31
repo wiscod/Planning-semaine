@@ -11,7 +11,7 @@ from twilio.rest import Client
 
 
 # Credentials from environment variables
-USERNAME = os.getenv("HYPERPLANNING_USERNAME", "")
+USERNAME = os.getenv("HYPERPLANNING_USERNAME", "DJIHOUA")
 PASSWORD = os.getenv("HYPERPLANNING_PASSWORD", "")
 ICS_URL = os.getenv("ICS_URL", "")
 HYPERPLANNING_URL = "https://estiam-planning2026.hyperplanning.fr/hp/etudiant"
@@ -66,7 +66,7 @@ def parse_ics_file(ics_content: str) -> dict:
                         'matiere': summary.split(' - ')[0].strip() if ' - ' in summary else summary,
                     })
 
-        # Trier par date (au cas où la source ne serait pas ordonnée)
+        # Trier par date
         for week in courses_by_week:
             courses_by_week[week].sort(key=lambda x: x['date_obj'])
 
@@ -95,7 +95,6 @@ async def get_courses_from_scraping():
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=True)
             page = await browser.new_page()
-            page.set_default_timeout(30000)
 
             await page.goto(HYPERPLANNING_URL)
             await page.wait_for_load_state("networkidle")
@@ -136,13 +135,34 @@ async def get_courses_from_scraping():
                 r'Cours du (\d+ \w+) de (\d+ heures \d+) à (\d+ heures \d+)\n(.+?)\n',
                 re.DOTALL
             )
+            
+            mois_fr = {
+                'janvier': 1, 'février': 2, 'fevrier': 2, 'mars': 3, 'avril': 4,
+                'mai': 5, 'juin': 6, 'juillet': 7, 'août': 8, 'aout': 8,
+                'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12,
+                'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+                'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
+            }
 
             for match in pattern.finditer(content):
                 date_str = match.group(1)
                 time_str = match.group(2).split()[0] + "h" + match.group(2).split()[2]
                 matiere = match.group(4).strip()
 
-                week = 16
+                try:
+                    parts = date_str.split()
+                    day = int(parts[0])
+                    month = mois_fr.get(parts[1].lower(), datetime.now().month)
+                    year = datetime.now().year
+                    
+                    if datetime.now().month >= 9 and month < 8:
+                        year += 1
+                        
+                    date_obj = datetime(year, month, day)
+                    week = date_obj.isocalendar()[1]
+                except Exception:
+                    week = datetime.now().isocalendar()[1]
+
                 courses_by_week.setdefault(week, []).append({
                     'date': date_str,
                     'time': time_str,
@@ -155,27 +175,29 @@ async def get_courses_from_scraping():
         return None
 
 
-def generate_jours_map() -> dict:
-    """Génère la map jour/date dynamiquement."""
-    MONTHS_EN = ["january","february","march","april","may","june","july","august","september","october","november","december"]
-    MONTHS_FR = ["JANVIER","FÉVRIER","MARS","AVRIL","MAI","JUIN","JUILLET","AOÛT","SEPTEMBRE","OCTOBRE","NOVEMBRE","DÉCEMBRE"]
-    DAYS_FR = ["DIMANCHE","LUNDI","MARDI","MERCREDI","JEUDI","VENDREDI","SAMEDI"]
-
-    jours_map = {}
-    year = datetime.now().year
-    for month in range(12):
-        days_in_month = (datetime(year, month + 2, 1) - timedelta(days=1)).day if month < 11 else 31
-        for day in range(1, days_in_month + 1):
-            d = datetime(year, month + 1, day)
-            date_key = f"{day} {MONTHS_EN[month]}".lower()
-            day_name = DAYS_FR[d.weekday() if d.weekday() < 7 else 6]
-            jours_map[date_key] = f"{day_name} {day} {MONTHS_FR[month]}"
-    return jours_map
-
-
 def format_planning_whatsapp(courses_by_week: dict, week_current: int, week_next: int) -> str:
     """Formate 2 semaines pour WhatsApp."""
-    jours_map = generate_jours_map()
+    jours_map = {
+        "13 april": "LUNDI 13 AVRIL",
+        "14 april": "MARDI 14 AVRIL",
+        "15 april": "MERCREDI 15 AVRIL",
+        "16 april": "JEUDI 16 AVRIL",
+        "17 april": "VENDREDI 17 AVRIL",
+        "20 april": "LUNDI 20 AVRIL",
+        "21 april": "MARDI 21 AVRIL",
+        "22 april": "MERCREDI 22 AVRIL",
+        "23 april": "JEUDI 23 AVRIL",
+        "24 april": "VENDREDI 24 AVRIL",
+        "27 april": "LUNDI 27 AVRIL",
+        "28 april": "MARDI 28 AVRIL",
+        "29 april": "MERCREDI 29 AVRIL",
+        "30 april": "JEUDI 30 AVRIL",
+        "1 may": "VENDREDI 1 MAI",
+        "2 may": "SAMEDI 2 MAI",
+        "3 may": "DIMANCHE 3 MAI",
+        "4 may": "LUNDI 4 MAI",
+        "5 may": "MARDI 5 MAI",
+    }
 
     message = "📅 *VOTRE PLANNING*\n\n"
 
@@ -269,11 +291,12 @@ async def main():
 
     print("\n1️⃣ Tentative ICS...")
     courses_by_week = await get_courses_from_ics()
-    if not courses_by_week:
-        print("2️⃣ ICS échoué, utilisation du scraping...")
+
+    if courses_by_week is None:
+        print("2️⃣ Fallback scraping...")
         courses_by_week = await get_courses_from_scraping()
 
-    if not courses_by_week:
+    if courses_by_week is None:
         print("❌ Impossible de récupérer les cours")
         return
 
@@ -289,16 +312,10 @@ async def main():
 
     # Committer et pousser le fichier JSON vers GitHub
     try:
-        github_token = os.getenv('GITHUB_TOKEN', '')
         subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
         subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
         subprocess.run(['git', 'add', 'docs/planning.json'], check=True)
         subprocess.run(['git', 'commit', '-m', 'Update planning.json'], check=True)
-        if github_token:
-            repo_url = subprocess.run(['git', 'config', '--get', 'remote.origin.url'],
-                                     capture_output=True, text=True, check=True).stdout.strip()
-            auth_url = repo_url.replace('https://', f'https://x-access-token:{github_token}@')
-            subprocess.run(['git', 'remote', 'set-url', 'origin', auth_url], check=True)
         subprocess.run(['git', 'push'], check=True)
         print("✅ planning.json poussé vers GitHub")
     except Exception as e:
