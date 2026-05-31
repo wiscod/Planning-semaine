@@ -84,7 +84,12 @@ async def get_courses_from_ics():
         response.raise_for_status()
         return parse_ics_file(response.text)
     except Exception as e:
-        print(f"Erreur ICS: {e}")
+        import traceback
+        error_msg = f"Erreur ICS: {e}\n{traceback.format_exc()}"
+        print(error_msg)
+        os.makedirs("docs", exist_ok=True)
+        with open("docs/error_ics.txt", "w") as f:
+            f.write(error_msg)
         return None
 
 
@@ -171,7 +176,12 @@ async def get_courses_from_scraping():
 
             return courses_by_week
     except Exception as e:
-        print(f"Erreur scraping: {e}")
+        import traceback
+        error_msg = f"Erreur scraping: {e}\n{traceback.format_exc()}"
+        print(error_msg)
+        os.makedirs("docs", exist_ok=True)
+        with open("docs/error_scraping.txt", "w") as f:
+            f.write(error_msg)
         return None
 
 
@@ -298,6 +308,14 @@ async def main():
 
     if courses_by_week is None:
         print("❌ Impossible de récupérer les cours")
+        try:
+            subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
+            subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
+            subprocess.run(['git', 'add', 'docs/'], check=True)
+            subprocess.run(['git', 'commit', '-m', 'Update errors'], check=True)
+            subprocess.run(['git', 'push'], check=True)
+        except Exception as e:
+            print(f"Erreur git (errors): {e}")
         return
 
     print("✏️ Formatage du message...")
