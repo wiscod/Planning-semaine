@@ -161,29 +161,38 @@ async def get_courses_from_scraping():
             }
 
             for i in range(3):
-                # Extraire les aria-labels
-                labels = await page.evaluate("""
+                # Extraire les aria-labels et le texte visible
+                courses_data = await page.evaluate("""
                     () => {
                         return Array.from(document.querySelectorAll('[aria-label]'))
-                                    .map(el => el.getAttribute('aria-label'))
-                                    .filter(label => label.toLowerCase().includes('cours du'));
+                                    .filter(el => el.getAttribute('aria-label').toLowerCase().includes('cours du'))
+                                    .map(el => {
+                                        return {
+                                            aria: el.getAttribute('aria-label'),
+                                            text: el.innerText || ''
+                                        };
+                                    });
                     }
                 """)
                 
-                for label in labels:
+                for item in courses_data:
+                    label = item['aria']
+                    text = item['text']
+                    
                     try:
                         first_line = label.replace('\\r', '').replace('\\n', ' ')
-                        
                         match = re.search(r'du(?: [a-zA-Zûéè]+)? (\d+ [a-zA-Zûéè]+) de (.*?) à (.*?)$', first_line, re.IGNORECASE)
                         if match:
                             date_str = match.group(1).lower()
                             time_start = match.group(2).replace(' heures ', 'h').replace(' ', '')
                             
-                            # group(3) contains "13 heures 00 Start-up & IT"
-                            raw_end_and_matiere = match.group(3)
-                            matiere = re.sub(r'^\\d+(?: heures | h |h)\\d*\\s*[-:,|]*\\s*', '', raw_end_and_matiere).strip()
-                            if not matiere:
-                                matiere = "Cours"
+                            # Extraire la matiere depuis le texte visible du bloc (qui ressemble a "09h30\\nStart-up & IT\\n...")
+                            lines = [line.strip() for line in text.split('\\n') if line.strip()]
+                            matiere = "Cours"
+                            for line in lines:
+                                if "h" not in line and not line.isdigit() and len(line) > 2:
+                                    matiere = line
+                                    break
                             
                             parts = date_str.split()
                             day = int(parts[0])
