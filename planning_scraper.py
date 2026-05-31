@@ -153,69 +153,42 @@ async def get_courses_from_scraping():
             """)
             await page.wait_for_timeout(3000)
 
-            courses_by_week = {}
-            pattern = re.compile(
-                r'Cours du (\d+ \w+) de (\d+ heures \d+) à (\d+ heures \d+)\n(.+?)\n',
-                re.DOTALL
-            )
-            
-            mois_fr = {
-                'janvier': 1, 'février': 2, 'fevrier': 2, 'mars': 3, 'avril': 4,
-                'mai': 5, 'juin': 6, 'juillet': 7, 'août': 8, 'aout': 8,
-                'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12,
-                'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
-                'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
-            }
+            await page.wait_for_timeout(3000)
 
-            for i in range(3):
-                await page.screenshot(path=f"docs/debug_week{i}.png", full_page=True)
-                content = await page.inner_text("body")
-                for match in pattern.finditer(content):
-                    date_str = match.group(1)
-                    time_str = match.group(2).split()[0] + "h" + match.group(2).split()[2]
-                    matiere = match.group(4).strip()
+            # Close the cookie modal AGAIN, because it appears after login!
+            await page.evaluate("""
+                () => {
+                    const fermerBtn = Array.from(document.querySelectorAll('*')).find(el => el.textContent && el.textContent.trim() === 'Fermer');
+                    if (fermerBtn) fermerBtn.click();
+                }
+            """)
+            await page.wait_for_timeout(1000)
 
-                    try:
-                        parts = date_str.split()
-                        day = int(parts[0])
-                        month = mois_fr.get(parts[1].lower(), datetime.now().month)
-                        year = datetime.now().year
-                        
-                        if datetime.now().month >= 9 and month < 8:
-                            year += 1
-                            
-                        date_obj = datetime(year, month, day)
-                        week = date_obj.isocalendar()[1]
-                    except Exception:
-                        week = datetime.now().isocalendar()[1]
-
-                    week_courses = courses_by_week.setdefault(week, [])
-                    course_id = f"{date_str}_{time_str}_{matiere}"
-                    if not any(f"{c['date']}_{c['time']}_{c['matiere']}" == course_id for c in week_courses):
-                        week_courses.append({
-                            'date': date_str,
-                            'time': time_str,
-                            'matiere': matiere,
-                        })
-                
-                # Navigate to next week
+            # Click the .ical export button
+            async with page.expect_download(timeout=15000) as download_info:
                 await page.evaluate("""
                     () => {
-                        const btns = Array.from(document.querySelectorAll('button, a, div'));
-                        const nextBtn = btns.find(el => {
-                            const aria = el.getAttribute('aria-label');
-                            const title = el.getAttribute('title');
-                            return (aria && aria.toLowerCase().includes('suivant')) || 
-                                   (title && title.toLowerCase().includes('suivant')) ||
-                                   el.className.includes('FlecheDroite');
-                        });
-                        if (nextBtn) nextBtn.click();
+                        const imgs = Array.from(document.querySelectorAll('img'));
+                        const icalImg = imgs.find(img => img.src && img.src.toLowerCase().includes('ical'));
+                        if (icalImg) {
+                            icalImg.click();
+                            if (icalImg.parentElement) icalImg.parentElement.click();
+                        } else {
+                            const els = Array.from(document.querySelectorAll('*'));
+                            const icalBtn = els.find(el => el.title && el.title.toLowerCase().includes('ical'));
+                            if (icalBtn) icalBtn.click();
+                        }
                     }
                 """)
-                await page.wait_for_timeout(2000)
+            
+            download = await download_info.value
+            path = await download.path()
+            
+            with open(path, "r", encoding="utf-8") as f:
+                ics_content = f.read()
 
             await browser.close()
-            return courses_by_week
+            return parse_ics_file(ics_content)
     except Exception as e:
         import traceback
         error_msg = f"Erreur scraping: {e}\n{traceback.format_exc()}"
