@@ -1,6 +1,9 @@
 name: Send Planning WhatsApp
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '0 5 * * *'    # 7:00 CEST
     - cron: '0 8 * * *'    # 10:00 CEST
