@@ -424,7 +424,7 @@ waiting for get_by_role("button", name="Se connecter")
   -   waiting 500ms
 
 Traceback (most recent call last):
-  File "/home/runner/work/Planning-semaine/Planning-semaine/planning_scraper.py", line 109, in get_courses_from_scraping
+  File "/home/runner/work/Planning-semaine/Planning-semaine/planning_scraper.py", line 117, in get_courses_from_scraping
     await page.get_by_role("button", name="Se connecter").click()
   File "/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 15046, in click
     await self._impl_obj.click(
