@@ -104,11 +104,14 @@ async def get_courses_from_scraping():
             await page.goto(HYPERPLANNING_URL)
             await page.wait_for_load_state("networkidle")
 
+            if not USERNAME or not PASSWORD:
+                raise ValueError("Les identifiants HyperPlanning ne sont pas configurés dans les variables d'environnement (GitHub Secrets)!")
+
             await page.get_by_placeholder("Saisissez votre identifiant.").fill(USERNAME)
             await page.get_by_placeholder("Saisissez votre mot de passe.").fill(PASSWORD)
             
-            # Wait for any blocking overlay to disappear, or force click
-            await page.get_by_role("button", name="Se connecter").click(force=True)
+            # Use Enter key to submit the form gracefully instead of forcing a click
+            await page.get_by_placeholder("Saisissez votre mot de passe.").press("Enter")
             await page.wait_for_load_state("networkidle")
             await page.wait_for_load_state("networkidle")
 
