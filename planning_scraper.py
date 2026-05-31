@@ -107,9 +107,14 @@ async def get_courses_from_scraping():
             await page.get_by_placeholder("Saisissez votre identifiant.").fill(USERNAME)
             await page.get_by_placeholder("Saisissez votre mot de passe.").fill(PASSWORD)
             
-            # Wait for any blocking overlay to disappear, or force click
-            await page.get_by_role("button", name="Se connecter").click(force=True)
-            await page.wait_for_load_state("networkidle")
+            # Close cookie modal
+            try:
+                await page.get_by_role("button", name="Fermer").click(timeout=2000)
+                await page.wait_for_timeout(500)
+            except Exception:
+                pass
+                
+            await page.get_by_role("button", name="Se connecter").click()
             await page.wait_for_load_state("networkidle")
 
             await page.evaluate("""
