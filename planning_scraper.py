@@ -172,13 +172,18 @@ async def get_courses_from_scraping():
                 
                 for label in labels:
                     try:
-                        first_line = label.split('\\n')[0]
-                        matiere = label.split('\\n')[1].strip() if len(label.split('\\n')) > 1 else "Cours"
+                        first_line = label.replace('\\r', '').replace('\\n', ' ')
                         
                         match = re.search(r'du(?: [a-zA-Zûéè]+)? (\d+ [a-zA-Zûéè]+) de (.*?) à (.*?)$', first_line, re.IGNORECASE)
                         if match:
                             date_str = match.group(1).lower()
                             time_start = match.group(2).replace(' heures ', 'h').replace(' ', '')
+                            
+                            # group(3) contains "13 heures 00 Start-up & IT"
+                            raw_end_and_matiere = match.group(3)
+                            matiere = re.sub(r'^\\d+(?: heures | h |h)\\d*\\s*[-:,|]*\\s*', '', raw_end_and_matiere).strip()
+                            if not matiere:
+                                matiere = "Cours"
                             
                             parts = date_str.split()
                             day = int(parts[0])
