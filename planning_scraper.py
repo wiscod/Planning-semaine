@@ -135,9 +135,6 @@ async def get_courses_from_scraping():
             """)
             await page.wait_for_timeout(3000)
 
-            content = await page.inner_text("body")
-            await browser.close()
-
             courses_by_week = {}
             pattern = re.compile(
                 r'Cours du (\d+ \w+) de (\d+ heures \d+) à (\d+ heures \d+)\n(.+?)\n',
@@ -152,31 +149,53 @@ async def get_courses_from_scraping():
                 'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
             }
 
-            for match in pattern.finditer(content):
-                date_str = match.group(1)
-                time_str = match.group(2).split()[0] + "h" + match.group(2).split()[2]
-                matiere = match.group(4).strip()
+            for _ in range(3):
+                content = await page.inner_text("body")
+                for match in pattern.finditer(content):
+                    date_str = match.group(1)
+                    time_str = match.group(2).split()[0] + "h" + match.group(2).split()[2]
+                    matiere = match.group(4).strip()
 
-                try:
-                    parts = date_str.split()
-                    day = int(parts[0])
-                    month = mois_fr.get(parts[1].lower(), datetime.now().month)
-                    year = datetime.now().year
-                    
-                    if datetime.now().month >= 9 and month < 8:
-                        year += 1
+                    try:
+                        parts = date_str.split()
+                        day = int(parts[0])
+                        month = mois_fr.get(parts[1].lower(), datetime.now().month)
+                        year = datetime.now().year
                         
-                    date_obj = datetime(year, month, day)
-                    week = date_obj.isocalendar()[1]
-                except Exception:
-                    week = datetime.now().isocalendar()[1]
+                        if datetime.now().month >= 9 and month < 8:
+                            year += 1
+                            
+                        date_obj = datetime(year, month, day)
+                        week = date_obj.isocalendar()[1]
+                    except Exception:
+                        week = datetime.now().isocalendar()[1]
 
-                courses_by_week.setdefault(week, []).append({
-                    'date': date_str,
-                    'time': time_str,
-                    'matiere': matiere,
-                })
+                    week_courses = courses_by_week.setdefault(week, [])
+                    course_id = f"{date_str}_{time_str}_{matiere}"
+                    if not any(f"{c['date']}_{c['time']}_{c['matiere']}" == course_id for c in week_courses):
+                        week_courses.append({
+                            'date': date_str,
+                            'time': time_str,
+                            'matiere': matiere,
+                        })
+                
+                # Navigate to next week
+                await page.evaluate("""
+                    () => {
+                        const btns = Array.from(document.querySelectorAll('button, a, div'));
+                        const nextBtn = btns.find(el => {
+                            const aria = el.getAttribute('aria-label');
+                            const title = el.getAttribute('title');
+                            return (aria && aria.toLowerCase().includes('suivant')) || 
+                                   (title && title.toLowerCase().includes('suivant')) ||
+                                   el.className.includes('FlecheDroite');
+                        });
+                        if (nextBtn) nextBtn.click();
+                    }
+                """)
+                await page.wait_for_timeout(2000)
 
+            await browser.close()
             return courses_by_week
     except Exception as e:
         import traceback
