@@ -104,14 +104,11 @@ async def get_courses_from_scraping():
             await page.goto(HYPERPLANNING_URL)
             await page.wait_for_load_state("networkidle")
 
-            if not USERNAME or not PASSWORD:
-                raise ValueError("Les identifiants HyperPlanning ne sont pas configurés dans les variables d'environnement (GitHub Secrets)!")
-
             await page.get_by_placeholder("Saisissez votre identifiant.").fill(USERNAME)
             await page.get_by_placeholder("Saisissez votre mot de passe.").fill(PASSWORD)
             
-            # Use Enter key to submit the form gracefully instead of forcing a click
-            await page.get_by_placeholder("Saisissez votre mot de passe.").press("Enter")
+            # Wait for any blocking overlay to disappear, or force click
+            await page.get_by_role("button", name="Se connecter").click(force=True)
             await page.wait_for_load_state("networkidle")
             await page.wait_for_load_state("networkidle")
 
@@ -130,8 +127,8 @@ async def get_courses_from_scraping():
                 () => {
                     const items = document.querySelectorAll('[role="menuitem"]');
                     const planning = Array.from(items).find(el =>
-                        el.getAttribute('aria-label') === 'en liste' ||
-                        el.textContent.trim() === 'en liste'
+                        el.getAttribute('aria-label') === 'en planning' ||
+                        el.textContent.trim() === 'en planning'
                     );
                     if (planning) planning.click();
                 }
@@ -139,80 +136,46 @@ async def get_courses_from_scraping():
             await page.wait_for_timeout(3000)
 
             content = await page.inner_text("body")
-            
-            # Save content for debugging
-            os.makedirs("docs", exist_ok=True)
-            with open("docs/debug_content.txt", "w", encoding="utf-8") as f:
-                f.write(content)
-
             await browser.close()
 
             courses_by_week = {}
+            pattern = re.compile(
+                r'Cours du (\d+ \w+) de (\d+ heures \d+) à (\d+ heures \d+)\n(.+?)\n',
+                re.DOTALL
+            )
+            
             mois_fr = {
                 'janvier': 1, 'février': 2, 'fevrier': 2, 'mars': 3, 'avril': 4,
                 'mai': 5, 'juin': 6, 'juillet': 7, 'août': 8, 'aout': 8,
-                'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12
+                'septembre': 9, 'octobre': 10, 'novembre': 11, 'décembre': 12, 'decembre': 12,
+                'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+                'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
             }
-            
-            current_date_str = None
-            current_time = None
-            current_subject = None
 
-            for line in content.split('\n'):
-                line = line.strip()
-                if not line:
-                    continue
+            for match in pattern.finditer(content):
+                date_str = match.group(1)
+                time_str = match.group(2).split()[0] + "h" + match.group(2).split()[2]
+                matiere = match.group(4).strip()
 
-                # Détecter la date: "mercredi 3 juin 2026"
-                if re.match(r'^(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\s+(\d+\s+\w+)\s+\d{4}$', line, re.IGNORECASE):
-                    match_date = re.search(r'\d+\s+\w+', line)
-                    if match_date:
-                        current_date_str = match_date.group(0) # "3 juin"
-                    current_time = None
-                    current_subject = None
-                    continue
-
-                # Détecter l'heure: "09h30 - 13h00"
-                time_match = re.match(r'^(\d{2}h\d{2})\s*-\s*(\d{2}h\d{2})$', line)
-                if time_match:
-                    current_time = time_match.groups() # ("09h30", "13h00")
-                    current_subject = None
-                    continue
-                
-                # La première ligne de texte après l'heure est le sujet du cours
-                if current_date_str and current_time and not current_subject:
-                    # Ignorer des mots clés si ce n'est pas le cours
-                    if line in ["Cours", "TD", "TP", "Examen"] or "Non plac" in line or "Semaine" in line:
-                        continue
-                    current_subject = line
+                try:
+                    parts = date_str.split()
+                    day = int(parts[0])
+                    month = mois_fr.get(parts[1].lower(), datetime.now().month)
+                    year = datetime.now().year
                     
-                    # On a tout, on sauvegarde le cours !
-                    try:
-                        day_str, month_str = current_date_str.split()
-                        month_num = mois_fr.get(month_str.lower(), 1)
-                        now = datetime.now()
-                        year = now.year
-                        # Gestion de l'année
-                        if month_num < 8 and now.month >= 8:
-                            year += 1
-                        elif month_num >= 8 and now.month < 8:
-                            year -= 1
-                            
-                        course_date = datetime(year, month_num, int(day_str))
-                        week = course_date.isocalendar()[1]
+                    if datetime.now().month >= 9 and month < 8:
+                        year += 1
                         
-                        start_time = current_time[0].replace('h', ':')
-                        end_time = current_time[1].replace('h', ':')
-                        
-                        course = {
-                            "date": current_date_str,
-                            "time": f"{start_time}-{end_time}",
-                            "matiere": current_subject,
-                        }
-                        
-                        courses_by_week.setdefault(week, []).append(course)
-                    except Exception as e:
-                        print(f"Erreur parsing cours: {e}")
+                    date_obj = datetime(year, month, day)
+                    week = date_obj.isocalendar()[1]
+                except Exception:
+                    week = datetime.now().isocalendar()[1]
+
+                courses_by_week.setdefault(week, []).append({
+                    'date': date_str,
+                    'time': time_str,
+                    'matiere': matiere,
+                })
 
             return courses_by_week
     except Exception as e:
@@ -342,9 +305,16 @@ async def main():
     print("\n1️⃣ Tentative ICS...")
     courses_by_week = await get_courses_from_ics()
 
-    if courses_by_week is None:
+    has_relevant_courses = False
+    if courses_by_week:
+        if courses_by_week.get(week_current) or courses_by_week.get(week_next):
+            has_relevant_courses = True
+
+    if not has_relevant_courses:
         print("2️⃣ Fallback scraping...")
-        courses_by_week = await get_courses_from_scraping()
+        scraping_result = await get_courses_from_scraping()
+        if scraping_result is not None:
+            courses_by_week = scraping_result
 
     if courses_by_week is None:
         print("❌ Impossible de récupérer les cours")
@@ -373,8 +343,6 @@ async def main():
         subprocess.run(['git', 'config', 'user.email', 'automation@github.com'], check=True)
         subprocess.run(['git', 'config', 'user.name', 'GitHub Action'], check=True)
         subprocess.run(['git', 'add', 'docs/planning.json'], check=True)
-        # Also add debug_content if it exists
-        subprocess.run('git add docs/debug_content.txt || true', shell=True)
         subprocess.run(['git', 'commit', '-m', 'Update planning.json'], check=True)
         subprocess.run(['git', 'push'], check=True)
         print("✅ planning.json poussé vers GitHub")
