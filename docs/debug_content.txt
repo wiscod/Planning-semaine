@@ -46,7 +46,7 @@ Documents
 5 notifications
 
 2
-Emploi du temps > en planning
+Emploi du temps > en liste
 DJIHOUA Edy
  
 36
@@ -173,297 +173,75 @@ DJIHOUA Edy
 	
 45
 septembre	octobre	novembre	décembre	janvier	février	mars	avril	mai	juin	juillet	août	septembre	octobre	
-08h00lun. 01 juin18h0008h00mar. 02 juin18h0008h00mer. 03 juin18h0008h00jeu. 04 juin18h0008h00ven. 05 juin18h00
-08h30
- 
- 
-09h00
- 
-09h30
- 
- 
-10h00
- 
-10h30
- 
- 
-11h00
- 
-11h30
- 
- 
-12h00
- 
-12h30
- 
- 
-13h00
- 
-13h30
- 
- 
-14h00
- 
-14h30
- 
- 
-15h00
- 
-15h30
- 
- 
-16h00
- 
-16h30
- 
- 
-17h00
- 
-17h30
- 
-08h30
- 
- 
-09h00
- 
-09h30
- 
- 
-10h00
- 
-10h30
- 
- 
-11h00
- 
-11h30
- 
- 
-12h00
- 
-12h30
- 
- 
-13h00
- 
-13h30
- 
- 
-14h00
- 
-14h30
- 
- 
-15h00
- 
-15h30
- 
- 
-16h00
- 
-16h30
- 
- 
-17h00
- 
-17h30
- 
-08h30
- 
- 
-09h00
- 
-09h30
- 
- 
-10h00
- 
-10h30
- 
- 
-11h00
- 
-11h30
- 
- 
-12h00
- 
-12h30
- 
- 
-13h00
- 
-13h30
- 
- 
-14h00
- 
-14h30
- 
- 
-15h00
- 
-15h30
- 
- 
-16h00
- 
-16h30
- 
- 
-17h00
- 
-17h30
- 
-08h30
- 
- 
-09h00
- 
-09h30
- 
- 
-10h00
- 
-10h30
- 
- 
-11h00
- 
-11h30
- 
- 
-12h00
- 
-12h30
- 
- 
-13h00
- 
-13h30
- 
- 
-14h00
- 
-14h30
- 
- 
-15h00
- 
-15h30
- 
- 
-16h00
- 
-16h30
- 
- 
-17h00
- 
-17h30
- 
-08h30
- 
- 
-09h00
- 
-09h30
- 
- 
-10h00
- 
-10h30
- 
- 
-11h00
- 
-11h30
- 
- 
-12h00
- 
-12h30
- 
- 
-13h00
- 
-13h30
- 
- 
-14h00
- 
-14h30
- 
- 
-15h00
- 
-15h30
- 
- 
-16h00
- 
-16h30
- 
- 
-17h00
- 
-17h30
- 
-23
-Ouverture des détails du cours
+Horaires
+Matière
+Enseignant
+Promotion
+Salle
 
+ Mémo
+
+Mémo
+Session
+Type
+mercredi 3 juin 2026
+09h30 - 13h00
 Start-up & IT
-
 ATTIA
-
 ATTIK
-
 CHRISTIN
-
 E4
-
 DISTANCIEL 04 (Teams)
-
-Ouverture des détails du cours
-
+N°3
+Cours
+14h00 - 17h30
 Start-up & IT
-
 ATTIA
-
 ATTIK
-
 CHRISTIN
-
 E4
-
 DISTANCIEL 04 (Teams)
-
-Ouverture des détails du cours
-
+N°4
+Cours
+vendredi 5 juin 2026
+09h30 - 13h00
 Professional feedback
-
 CHE MENET
-
 ELOUALI
-
 SANDER
-
 E4
-
 DISTANCIEL (Zoom)
-
-Ouverture des détails du cours
-
+ 
+N°1
+Cours
+14h00 - 17h30
 Business English
-
 CHE MENET
-
 HUSSON
-
 E4
-
 DISTANCIEL (Teams)
-
+ 
+N°1
+Cours
+Non placé
+Semaine 23
+Business English
+E4
+ 
+ 
+Cours
+Semaine 23
+Professional feedback
+E4
+ 
+ 
+Cours
+Emploi du temps en liste de DJIHOUA Edy
+- Barre d'outils, Utilisez les flèches gauche et droite pour naviguer.
+- Filtrer la liste
+Activez l'édition avec les touches entrée ou majuscule + entrée.
+Total
+Lu
 Mentions légales
 Confidentialité
 Accessibilité : non conforme
