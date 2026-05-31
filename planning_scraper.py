@@ -107,14 +107,27 @@ async def get_courses_from_scraping():
             await page.get_by_placeholder("Saisissez votre identifiant.").fill(USERNAME)
             await page.get_by_placeholder("Saisissez votre mot de passe.").fill(PASSWORD)
             
-            # Close cookie modal
-            try:
-                await page.get_by_role("button", name="Fermer").click(timeout=2000)
-                await page.wait_for_timeout(500)
-            except Exception:
-                pass
-                
-            await page.get_by_role("button", name="Se connecter").click()
+            # Bulletproof login: close cookie via JS, hide backdrop, press enter, and force click login
+            await page.evaluate("""
+                () => {
+                    const elements = Array.from(document.querySelectorAll('*'));
+                    const fermerBtn = elements.find(el => el.textContent && el.textContent.trim() === 'Fermer');
+                    if (fermerBtn) fermerBtn.click();
+                    
+                    const backdrop = document.querySelector('.BloquerInterface');
+                    if (backdrop) backdrop.style.display = 'none';
+                }
+            """)
+            await page.wait_for_timeout(1000)
+            
+            await page.keyboard.press("Enter")
+            
+            await page.evaluate("""
+                () => {
+                    const loginBtn = Array.from(document.querySelectorAll('button, div, a')).find(el => el.textContent && el.textContent.trim() === 'Se connecter');
+                    if (loginBtn) loginBtn.click();
+                }
+            """)
             await page.wait_for_load_state("networkidle")
 
             await page.evaluate("""
