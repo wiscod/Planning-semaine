@@ -1,30 +1,4 @@
 {
-  "timestamp": "2026-05-31T21:22:43.673747",
-  "weeks": {
-    "23": {
-      "semaine": 23,
-      "courses": [
-        {
-          "date": "3 juin",
-          "time": "09:30-13:00",
-          "matiere": "Start-up & IT"
-        },
-        {
-          "date": "3 juin",
-          "time": "14:00-17:30",
-          "matiere": "Start-up & IT"
-        },
-        {
-          "date": "5 juin",
-          "time": "09:30-13:00",
-          "matiere": "Professional feedback"
-        },
-        {
-          "date": "5 juin",
-          "time": "14:00-17:30",
-          "matiere": "Business English"
-        }
-      ]
-    }
-  }
+  "timestamp": "2026-05-31T22:12:15.458627",
+  "weeks": {}
 }
