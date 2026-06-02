@@ -183,18 +183,10 @@ async def get_courses_from_scraping():
                         first_line = label.replace('\\r', '').replace('\\n', ' ')
                         match = re.search(r'du(?: [a-zA-Zûéè]+)? (\d+ [a-zA-Zûéè]+) de (.*?) à (.*?)$', first_line, re.IGNORECASE)
                         if match:
-                            date_str = match.group(1).lower()
+                            date_raw = match.group(1).lower()
                             time_start = match.group(2).replace(' heures ', 'h').replace(' ', '')
                             
-                            # Extraire la matiere depuis le texte visible du bloc (qui ressemble a "09h30\\nStart-up & IT\\n...")
-                            lines = [line.strip() for line in text.split('\\n') if line.strip()]
-                            matiere = "Cours"
-                            for line in lines:
-                                if "h" not in line and not line.isdigit() and len(line) > 2:
-                                    matiere = line
-                                    break
-                            
-                            parts = date_str.split()
+                            parts = date_raw.split()
                             day = int(parts[0])
                             month = mois_fr.get(parts[1], datetime.now().month)
                             year = datetime.now().year
@@ -203,6 +195,26 @@ async def get_courses_from_scraping():
                                 
                             date_obj = datetime(year, month, day)
                             week = date_obj.isocalendar()[1]
+                            
+                            mois_en = {
+                                1: 'january', 2: 'february', 3: 'march', 4: 'april',
+                                5: 'may', 6: 'june', 7: 'july', 8: 'august',
+                                9: 'september', 10: 'october', 11: 'november', 12: 'december'
+                            }
+                            date_str = f"{day} {mois_en.get(month, 'january')}"
+                            
+                            # Extraire la matiere propre
+                            clean_text = text.replace('\\r', '').replace('\\n\\n', '\\n')
+                            lines = [line.strip() for line in clean_text.split('\\n') if line.strip()]
+                            matiere = "Cours"
+                            for line in lines:
+                                if "Ouverture" in line or "détails" in line or "dǸtails" in line:
+                                    continue
+                                if "h" in line and any(c.isdigit() for c in line):
+                                    continue
+                                if len(line) > 2:
+                                    matiere = line
+                                    break
                             
                             week_courses = courses_by_week.setdefault(week, [])
                             course_id = f"{date_str}_{time_start}_{matiere}"
