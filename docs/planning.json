@@ -1,26 +1,26 @@
 {
-  "timestamp": "2026-06-02T21:59:04.417237",
+  "timestamp": "2026-06-03T00:00:40.596310",
   "weeks": {
     "23": {
       "semaine": 23,
       "courses": [
         {
-          "date": "3 juin",
+          "date": "3 june",
           "time": "9h30",
-          "matiere": "Ouverture des détails du cours\n\nStart-up & IT\n\nATTIA\n\nATTIK\n\nCHRISTIN\n\nE4\n\nDISTANCIEL 04 (Teams)"
+          "matiere": "Cours"
         },
         {
-          "date": "3 juin",
+          "date": "3 june",
           "time": "14h00",
-          "matiere": "Ouverture des détails du cours\n\nStart-up & IT\n\nATTIA\n\nATTIK\n\nCHRISTIN\n\nE4\n\nDISTANCIEL 04 (Teams)"
+          "matiere": "Cours"
         },
         {
-          "date": "5 juin",
+          "date": "5 june",
           "time": "9h30",
-          "matiere": "Ouverture des détails du cours\n\nProfessional feedback\n\nCHE MENET\n\nELOUALI\n\nSANDER\n\nE4\n\nDISTANCIEL (Zoom)"
+          "matiere": "Cours"
         },
         {
-          "date": "5 juin",
+          "date": "5 june",
           "time": "14h00",
           "matiere": "Cours"
         }
