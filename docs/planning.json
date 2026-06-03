@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-03T00:00:40.596310",
+  "timestamp": "2026-06-03T00:02:43.559400",
   "weeks": {
     "23": {
       "semaine": 23,
@@ -7,22 +7,22 @@
         {
           "date": "3 june",
           "time": "9h30",
-          "matiere": "Cours"
+          "matiere": "Start-up & IT"
         },
         {
           "date": "3 june",
           "time": "14h00",
-          "matiere": "Cours"
+          "matiere": "Start-up & IT"
         },
         {
           "date": "5 june",
           "time": "9h30",
-          "matiere": "Cours"
+          "matiere": "Professional feedback"
         },
         {
           "date": "5 june",
           "time": "14h00",
-          "matiere": "Cours"
+          "matiere": "Business English"
         }
       ]
     }
