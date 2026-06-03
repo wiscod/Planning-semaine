@@ -231,6 +231,7 @@ async def get_courses_from_scraping():
                 await page.screenshot(path=f"docs/debug_week{i}.png", full_page=True)
 
                 # Navigate to next week using the week ruler!
+                week_current = datetime.now().isocalendar()[1]
                 next_week_num = week_current + i + 1
                 try:
                     await page.evaluate(f"""
