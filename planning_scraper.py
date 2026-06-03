@@ -234,15 +234,9 @@ async def get_courses_from_scraping():
                 week_current = datetime.now().isocalendar()[1]
                 next_week_num = week_current + i + 1
                 try:
-                    await page.evaluate(f"""
-                        () => {{
-                            const els = Array.from(document.querySelectorAll('.calendrier-jour'));
-                            const weekBtn = els.find(el => el.textContent.trim() === '{next_week_num}');
-                            if (weekBtn) weekBtn.click();
-                        }}
-                    """)
+                    await page.locator(f"div.calendrier-jour:text-is('{next_week_num}')").click(timeout=3000)
                 except Exception as e:
-                    print(f"Erreur click semaine: {e}")
+                    print(f"Erreur click semaine {next_week_num}: {e}")
                 
                 await page.wait_for_timeout(2500)
 
