@@ -227,21 +227,23 @@ async def get_courses_from_scraping():
                     except Exception as e:
                         print(f"Erreur parsing label: {label} -> {e}")
 
+                # Prendre un screenshot pour debogage
+                await page.screenshot(path=f"docs/debug_week{i}.png", full_page=True)
+
                 # Navigate to next week
-                await page.evaluate("""
-                    () => {
-                        const btns = Array.from(document.querySelectorAll('button, a, div'));
-                        const nextBtn = btns.find(el => {
-                            const aria = el.getAttribute('aria-label');
-                            const title = el.getAttribute('title');
-                            return (aria && aria.toLowerCase().includes('suivant')) || 
-                                   (title && title.toLowerCase().includes('suivant')) ||
-                                   (el.className && typeof el.className === 'string' && el.className.includes('FlecheDroite'));
-                        });
-                        if (nextBtn) nextBtn.click();
-                    }
-                """)
-                await page.wait_for_timeout(2000)
+                try:
+                    # Essayer le selecteur titre classique d'HyperPlanning
+                    await page.click('[title*="emaine suivante"], [aria-label*="emaine suivante"]', timeout=2000)
+                except Exception:
+                    try:
+                        # Chercher l'icone FlecheDroite
+                        await page.click('.FlecheDroite', timeout=2000)
+                    except Exception:
+                        # Repli: utiliser la touche clavier fleche droite qui navigue la grille
+                        await page.mouse.click(500, 500) # focus sur le calendrier
+                        await page.keyboard.press("ArrowRight")
+                
+                await page.wait_for_timeout(2500)
 
             await browser.close()
             return courses_by_week
