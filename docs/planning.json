@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-03T21:59:37.536678",
+  "timestamp": "2026-06-03T22:07:48.307053",
   "weeks": {
     "23": {
       "semaine": 23,
@@ -23,6 +23,21 @@
           "date": "5 june",
           "time": "14h00",
           "matiere": "Business English"
+        }
+      ]
+    },
+    "24": {
+      "semaine": 24,
+      "courses": [
+        {
+          "date": "10 june",
+          "time": "9h30",
+          "matiere": "DataOps & Data Storage"
+        },
+        {
+          "date": "10 june",
+          "time": "14h00",
+          "matiere": "DataOps & Data Storage"
         }
       ]
     }
