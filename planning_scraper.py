@@ -230,17 +230,24 @@ async def get_courses_from_scraping():
                 # Prendre un screenshot pour debogage
                 await page.screenshot(path=f"docs/debug_week{i}.png", full_page=True)
 
+                if i == 0:
+                    nav_html = await page.evaluate("""
+                        () => {
+                            const header = document.querySelector('header, .bandeau, .Entete, [role="banner"]') || document.body;
+                            return header.innerHTML;
+                        }
+                    """)
+                    with open("docs/nav_debug.txt", "w", encoding="utf-8") as f:
+                        f.write(nav_html)
+
                 # Navigate to next week
                 try:
-                    # Essayer le selecteur titre classique d'HyperPlanning
-                    await page.click('[title*="emaine suivante"], [aria-label*="emaine suivante"]', timeout=2000)
+                    await page.click('button[title*="emaine suivante"], [aria-label*="emaine suivante"]', timeout=2000)
                 except Exception:
                     try:
-                        # Chercher l'icone FlecheDroite
-                        await page.click('.FlecheDroite', timeout=2000)
+                        await page.click('.icon-angle-right, .fa-chevron-right, .icon-arrow-right, .FlecheDroite', timeout=2000)
                     except Exception:
-                        # Repli: utiliser la touche clavier fleche droite qui navigue la grille
-                        await page.mouse.click(500, 500) # focus sur le calendrier
+                        await page.mouse.click(200, 200) 
                         await page.keyboard.press("ArrowRight")
                 
                 await page.wait_for_timeout(2500)
