@@ -204,8 +204,8 @@ async def get_courses_from_scraping():
                             date_str = f"{day} {mois_en.get(month, 'january')}"
                             
                             # Extraire la matiere propre
-                            clean_text = text.replace('\\r', '').replace('\\n\\n', '\\n')
-                            lines = [line.strip() for line in clean_text.split('\\n') if line.strip()]
+                            clean_text = text.replace('\r', '').replace('\n\n', '\n')
+                            lines = [line.strip() for line in clean_text.split('\n') if line.strip()]
                             matiere = "Cours"
                             for line in lines:
                                 if "Ouverture" in line or "détails" in line or "dǸtails" in line:
