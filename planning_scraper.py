@@ -230,31 +230,18 @@ async def get_courses_from_scraping():
                 # Prendre un screenshot pour debogage
                 await page.screenshot(path=f"docs/debug_week{i}.png", full_page=True)
 
-                if i == 0:
-                    nav_html = await page.evaluate("""
-                        () => {
-                            const cal = document.querySelector('.Bandeau') || document.body;
-                            return cal.innerHTML;
-                        }
-                    """)
-                    with open("docs/nav_debug.txt", "w", encoding="utf-8") as f:
-                        f.write(nav_html)
-
-                # Navigate to next week
+                # Navigate to next week using the week ruler!
+                next_week_num = week_current + i + 1
                 try:
-                    # Look for elements with "Right" or "Droite" in class near the top
-                    await page.evaluate("""
-                        () => {
-                            const els = Array.from(document.querySelectorAll('div, button, li, a, span, i'));
-                            const rightArrow = els.find(el => {
-                                const c = el.className || '';
-                                return typeof c === 'string' && (c.includes('Right') || c.includes('Droite') || c.includes('Suivant')) && !c.includes('Marge') && !c.includes('Scroll');
-                            });
-                            if (rightArrow) rightArrow.click();
-                        }
+                    await page.evaluate(f"""
+                        () => {{
+                            const els = Array.from(document.querySelectorAll('.calendrier-jour'));
+                            const weekBtn = els.find(el => el.textContent.trim() === '{next_week_num}');
+                            if (weekBtn) weekBtn.click();
+                        }}
                     """)
-                except Exception:
-                    pass
+                except Exception as e:
+                    print(f"Erreur click semaine: {e}")
                 
                 await page.wait_for_timeout(2500)
 
