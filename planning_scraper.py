@@ -233,8 +233,8 @@ async def get_courses_from_scraping():
                 if i == 0:
                     nav_html = await page.evaluate("""
                         () => {
-                            const header = document.querySelector('header, .bandeau, .Entete, [role="banner"]') || document.body;
-                            return header.innerHTML;
+                            const cal = document.querySelector('.Bandeau') || document.body;
+                            return cal.innerHTML;
                         }
                     """)
                     with open("docs/nav_debug.txt", "w", encoding="utf-8") as f:
@@ -242,13 +242,19 @@ async def get_courses_from_scraping():
 
                 # Navigate to next week
                 try:
-                    await page.click('button[title*="emaine suivante"], [aria-label*="emaine suivante"]', timeout=2000)
+                    # Look for elements with "Right" or "Droite" in class near the top
+                    await page.evaluate("""
+                        () => {
+                            const els = Array.from(document.querySelectorAll('div, button, li, a, span, i'));
+                            const rightArrow = els.find(el => {
+                                const c = el.className || '';
+                                return typeof c === 'string' && (c.includes('Right') || c.includes('Droite') || c.includes('Suivant')) && !c.includes('Marge') && !c.includes('Scroll');
+                            });
+                            if (rightArrow) rightArrow.click();
+                        }
+                    """)
                 except Exception:
-                    try:
-                        await page.click('.icon-angle-right, .fa-chevron-right, .icon-arrow-right, .FlecheDroite', timeout=2000)
-                    except Exception:
-                        await page.mouse.click(200, 200) 
-                        await page.keyboard.press("ArrowRight")
+                    pass
                 
                 await page.wait_for_timeout(2500)
 
