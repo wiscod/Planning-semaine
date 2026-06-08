@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-07T21:29:05.185508",
+  "timestamp": "2026-06-08T06:32:39.372393",
   "weeks": {
     "24": {
       "semaine": 24,
@@ -13,6 +13,46 @@
           "date": "10 june",
           "time": "14h00",
           "matiere": "DataOps & Data Storage"
+        }
+      ]
+    },
+    "25": {
+      "semaine": 25,
+      "courses": [
+        {
+          "date": "16 june",
+          "time": "9h30",
+          "matiere": "ANNU"
+        },
+        {
+          "date": "17 june",
+          "time": "9h30",
+          "matiere": "DevOps - Proj Mgmt."
+        },
+        {
+          "date": "17 june",
+          "time": "14h00",
+          "matiere": "DevOps - Proj Mgmt."
+        },
+        {
+          "date": "18 june",
+          "time": "9h30",
+          "matiere": "DevOps - Proj Mgmt."
+        },
+        {
+          "date": "18 june",
+          "time": "14h00",
+          "matiere": "DevOps - Proj Mgmt."
+        },
+        {
+          "date": "19 june",
+          "time": "9h30",
+          "matiere": "DevOps - Proj Mgmt."
+        },
+        {
+          "date": "19 june",
+          "time": "14h00",
+          "matiere": "DevOps - Proj Mgmt."
         }
       ]
     }
