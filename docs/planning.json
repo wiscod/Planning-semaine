@@ -1,21 +1,6 @@
 {
-  "timestamp": "2026-06-12T21:35:36.675484",
+  "timestamp": "2026-06-13T06:27:41.450752",
   "weeks": {
-    "24": {
-      "semaine": 24,
-      "courses": [
-        {
-          "date": "10 june",
-          "time": "9h30",
-          "matiere": "DataOps & Data Storage"
-        },
-        {
-          "date": "10 june",
-          "time": "14h00",
-          "matiere": "DataOps & Data Storage"
-        }
-      ]
-    },
     "25": {
       "semaine": 25,
       "courses": [
