@@ -1,51 +1,6 @@
 {
-  "timestamp": "2026-06-19T21:27:07.728200",
+  "timestamp": "2026-06-20T06:30:29.498121",
   "weeks": {
-    "25": {
-      "semaine": 25,
-      "courses": [
-        {
-          "date": "15 june",
-          "time": "10h00",
-          "matiere": "Hiring strategy"
-        },
-        {
-          "date": "16 june",
-          "time": "9h30",
-          "matiere": "ANNU"
-        },
-        {
-          "date": "17 june",
-          "time": "9h30",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "17 june",
-          "time": "14h00",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "18 june",
-          "time": "9h30",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "18 june",
-          "time": "14h00",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "19 june",
-          "time": "9h30",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "19 june",
-          "time": "14h00",
-          "matiere": "DevOps - Proj Mgmt."
-        }
-      ]
-    },
     "26": {
       "semaine": 26,
       "courses": [
