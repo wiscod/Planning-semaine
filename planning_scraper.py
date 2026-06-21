@@ -59,6 +59,23 @@ def parse_ics_file(ics_content: str) -> dict:
                     else:
                         time_str = str(time_obj)
 
+                    location_raw = str(component.get('location', '')).strip()
+                    location = ""
+                    if location_raw:
+                        loc_lower = location_raw.lower()
+                        if "distanciel" in loc_lower:
+                            location = "Distanciel"
+                        elif "salle" in loc_lower or "amphi" in loc_lower:
+                            location = f"Présentiel - {location_raw}"
+                        elif "présentiel" in loc_lower or "presentiel" in loc_lower:
+                            location = "Présentiel"
+                        else:
+                            # If it's something else, just append it
+                            location = f"Présentiel - {location_raw}"
+                            
+                    if location:
+                        time_str = f"{time_str} ({location})"
+
                     courses_by_week[week_num].append({
                         'date': start_date.strftime('%d %B').lower(),
                         'date_obj': start_date,
@@ -203,18 +220,35 @@ async def get_courses_from_scraping():
                             }
                             date_str = f"{day} {mois_en.get(month, 'january')}"
                             
-                            # Extraire la matiere propre
+                            # Extraire la matiere propre et la salle / distanciel
                             clean_text = text.replace('\r', '').replace('\n\n', '\n')
                             lines = [line.strip() for line in clean_text.split('\n') if line.strip()]
                             matiere = "Cours"
+                            location = ""
                             for line in lines:
-                                if "Ouverture" in line or "détails" in line or "dǸtails" in line:
+                                line_lower = line.lower()
+                                if "ouverture" in line_lower or "détails" in line_lower or "dǸtails" in line_lower:
                                     continue
-                                if "h" in line and any(c.isdigit() for c in line):
+                                if "h" in line_lower and any(c.isdigit() for c in line_lower) and len(line) <= 15:
                                     continue
-                                if len(line) > 2:
-                                    matiere = line
-                                    break
+                                
+                                # Détection de la localisation
+                                if "distanciel" in line_lower:
+                                    location = "Distanciel"
+                                elif "salle" in line_lower or "amphi" in line_lower:
+                                    location = f"Présentiel - {line}"
+                                elif "présentiel" in line_lower or "presentiel" in line_lower:
+                                    if not location:
+                                        location = "Présentiel"
+                                
+                                # Première ligne valide est la matière
+                                elif len(line) > 2 and matiere == "Cours":
+                                    # On exclut le nom du prof ou le groupe (E4)
+                                    if line not in ["E4"] and not line.startswith("M.") and not line.startswith("Mme"):
+                                        matiere = line
+                            
+                            if location:
+                                time_start = f"{time_start} ({location})"
                             
                             week_courses = courses_by_week.setdefault(week, [])
                             course_id = f"{date_str}_{time_start}_{matiere}"
