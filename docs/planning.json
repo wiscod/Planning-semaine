@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-06-21T15:34:28.478354",
+  "timestamp": "2026-06-21T20:23:30.603037",
   "weeks": {
     "26": {
       "semaine": 26,
       "courses": [
         {
           "date": "22 june",
-          "time": "10h00",
+          "time": "10h00 (Présentiel - Salle H (Victor HUGO))",
           "matiere": "Hiring strategy"
         },
         {
@@ -16,7 +16,7 @@
         },
         {
           "date": "24 june",
-          "time": "9h30",
+          "time": "9h30 (Présentiel - PRESENTIEL LYON SALLE 11)",
           "matiere": "DevOps - Proj Mgmt."
         },
         {
@@ -26,12 +26,12 @@
         },
         {
           "date": "24 june",
-          "time": "14h00",
+          "time": "14h00 (Présentiel - PRESENTIEL LYON SALLE 11)",
           "matiere": "DevOps - Proj Mgmt."
         },
         {
           "date": "25 june",
-          "time": "10h00",
+          "time": "10h00 (Présentiel - Salle X (Malcolm X) - Présentiel 51 rue Paul Meurice)",
           "matiere": "Hiring strategy"
         }
       ]
