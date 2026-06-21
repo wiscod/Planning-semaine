@@ -66,12 +66,12 @@ def parse_ics_file(ics_content: str) -> dict:
                         if "distanciel" in loc_lower:
                             location = "Distanciel"
                         elif "salle" in loc_lower or "amphi" in loc_lower:
-                            location = f"Présentiel - {location_raw}"
+                            location = f"Presentiel - {location_raw}"
                         elif "présentiel" in loc_lower or "presentiel" in loc_lower:
-                            location = "Présentiel"
+                            location = "Presentiel"
                         else:
                             # If it's something else, just append it
-                            location = f"Présentiel - {location_raw}"
+                            location = f"Presentiel - {location_raw}"
                             
                     if location:
                         time_str = f"{time_str} ({location})"
@@ -236,10 +236,10 @@ async def get_courses_from_scraping():
                                 if "distanciel" in line_lower:
                                     location = "Distanciel"
                                 elif "salle" in line_lower or "amphi" in line_lower:
-                                    location = f"Présentiel - {line}"
+                                    location = f"Presentiel - {line}"
                                 elif "présentiel" in line_lower or "presentiel" in line_lower:
                                     if not location:
-                                        location = "Présentiel"
+                                        location = "Presentiel"
                                 
                                 # Première ligne valide est la matière
                                 elif len(line) > 2 and matiere == "Cours":
