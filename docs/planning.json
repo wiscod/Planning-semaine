@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-21T21:30:56.053577",
+  "timestamp": "2026-06-22T06:48:32.522483",
   "weeks": {
     "26": {
       "semaine": 26,
@@ -33,6 +33,41 @@
           "date": "25 june",
           "time": "10h00 (Presentiel - Salle X (Malcolm X) - Présentiel 51 rue Paul Meurice)",
           "matiere": "Hiring strategy"
+        }
+      ]
+    },
+    "27": {
+      "semaine": 27,
+      "courses": [
+        {
+          "date": "30 june",
+          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Hackathon"
+        },
+        {
+          "date": "30 june",
+          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Hackathon"
+        },
+        {
+          "date": "1 july",
+          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Hackathon"
+        },
+        {
+          "date": "1 july",
+          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Hackathon"
+        },
+        {
+          "date": "2 july",
+          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Hackathon"
+        },
+        {
+          "date": "2 july",
+          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Hackathon"
         }
       ]
     }
