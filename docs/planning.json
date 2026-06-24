@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-24T09:02:33.202653",
+  "timestamp": "2026-06-24T11:58:15.929793",
   "weeks": {
     "26": {
       "semaine": 26,
@@ -62,11 +62,6 @@
         {
           "date": "2 july",
           "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Hackathon"
-        },
-        {
-          "date": "2 july",
-          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
           "matiere": "Hackathon"
         }
       ]
