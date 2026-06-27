@@ -1,41 +1,6 @@
 {
-  "timestamp": "2026-06-26T21:31:26.666352",
+  "timestamp": "2026-06-27T06:12:22.726932",
   "weeks": {
-    "26": {
-      "semaine": 26,
-      "courses": [
-        {
-          "date": "22 june",
-          "time": "10h00 (Presentiel - Salle F (Ella FITZGERALD))",
-          "matiere": "Hiring strategy"
-        },
-        {
-          "date": "24 june",
-          "time": "9h30",
-          "matiere": "ANNU"
-        },
-        {
-          "date": "24 june",
-          "time": "9h30 (Presentiel - Salle E (Albert EINSTEIN))",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "24 june",
-          "time": "14h00",
-          "matiere": "ANNU"
-        },
-        {
-          "date": "24 june",
-          "time": "14h00 (Presentiel - Salle E (Albert EINSTEIN))",
-          "matiere": "DevOps - Proj Mgmt."
-        },
-        {
-          "date": "25 june",
-          "time": "10h00 (Presentiel - Salle X (Malcolm X) - Présentiel 51 rue Paul Meurice)",
-          "matiere": "Hiring strategy"
-        }
-      ]
-    },
     "27": {
       "semaine": 27,
       "courses": [
