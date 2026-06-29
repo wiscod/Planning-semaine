@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-28T21:48:14.876755",
+  "timestamp": "2026-06-29T06:33:14.584166",
   "weeks": {
     "27": {
       "semaine": 27,
@@ -33,6 +33,41 @@
           "date": "2 july",
           "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
           "matiere": "Hackathon"
+        }
+      ]
+    },
+    "28": {
+      "semaine": 28,
+      "courses": [
+        {
+          "date": "7 july",
+          "time": "9h30 (Distanciel)",
+          "matiere": "Info System Management"
+        },
+        {
+          "date": "7 july",
+          "time": "14h00 (Distanciel)",
+          "matiere": "Info System Management"
+        },
+        {
+          "date": "8 july",
+          "time": "9h30 (Distanciel)",
+          "matiere": "Info System Management"
+        },
+        {
+          "date": "8 july",
+          "time": "14h00 (Distanciel)",
+          "matiere": "Info System Management"
+        },
+        {
+          "date": "9 july",
+          "time": "9h30 (Distanciel)",
+          "matiere": "Info System Management"
+        },
+        {
+          "date": "9 july",
+          "time": "14h00 (Distanciel)",
+          "matiere": "Info System Management"
         }
       ]
     }
