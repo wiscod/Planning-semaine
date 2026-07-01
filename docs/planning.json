@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-01T15:52:32.405768",
+  "timestamp": "2026-07-01T21:33:41.779995",
   "weeks": {
     "27": {
       "semaine": 27,
@@ -26,12 +26,12 @@
         },
         {
           "date": "2 july",
-          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
+          "time": "9h30 (Presentiel - Salle X (Malcolm X) - Présentiel 51 rue Paul Meurice)",
           "matiere": "Hackathon"
         },
         {
           "date": "2 july",
-          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
+          "time": "13h30 (Presentiel - Salle X (Malcolm X) - Présentiel 51 rue Paul Meurice)",
           "matiere": "Hackathon"
         }
       ]
