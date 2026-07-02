@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-02T11:50:21.605892",
+  "timestamp": "2026-07-02T15:45:38.225645",
   "weeks": {
     "27": {
       "semaine": 27,
@@ -41,32 +41,32 @@
       "courses": [
         {
           "date": "7 july",
-          "time": "9h30 (Distanciel)",
+          "time": "9h30 (Presentiel - Salle D (Donkey Kong))",
           "matiere": "Info System Management"
         },
         {
           "date": "7 july",
-          "time": "14h00 (Distanciel)",
+          "time": "14h00 (Presentiel - Salle D (Donkey Kong))",
           "matiere": "Info System Management"
         },
         {
           "date": "8 july",
-          "time": "9h30 (Distanciel)",
+          "time": "9h30 (Presentiel - Salle D (Donkey Kong))",
           "matiere": "Info System Management"
         },
         {
           "date": "8 july",
-          "time": "14h00 (Distanciel)",
+          "time": "14h00 (Presentiel - Salle D (Donkey Kong))",
           "matiere": "Info System Management"
         },
         {
           "date": "9 july",
-          "time": "9h30 (Distanciel)",
+          "time": "9h30 (Presentiel - Salle D (Donkey Kong))",
           "matiere": "Info System Management"
         },
         {
           "date": "9 july",
-          "time": "14h00 (Distanciel)",
+          "time": "14h00 (Presentiel - Salle D (Donkey Kong))",
           "matiere": "Info System Management"
         }
       ]
