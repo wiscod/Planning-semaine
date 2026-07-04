@@ -1,41 +1,6 @@
 {
-  "timestamp": "2026-07-03T22:02:49.485479",
+  "timestamp": "2026-07-04T07:39:47.153183",
   "weeks": {
-    "27": {
-      "semaine": 27,
-      "courses": [
-        {
-          "date": "30 june",
-          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Hackathon"
-        },
-        {
-          "date": "30 june",
-          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Hackathon"
-        },
-        {
-          "date": "1 july",
-          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Hackathon"
-        },
-        {
-          "date": "1 july",
-          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Hackathon"
-        },
-        {
-          "date": "2 july",
-          "time": "9h30 (Presentiel - Salle X (Malcolm X) - Présentiel 51 rue Paul Meurice)",
-          "matiere": "Hackathon"
-        },
-        {
-          "date": "2 july",
-          "time": "13h30 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Hackathon"
-        }
-      ]
-    },
     "28": {
       "semaine": 28,
       "courses": [
