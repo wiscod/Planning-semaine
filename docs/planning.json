@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-08T12:22:48.651514",
+  "timestamp": "2026-07-08T16:26:02.576099",
   "weeks": {
     "28": {
       "semaine": 28,
@@ -33,16 +33,6 @@
           "date": "9 july",
           "time": "14h00 (Distanciel)",
           "matiere": "Info System Management"
-        }
-      ]
-    },
-    "29": {
-      "semaine": 29,
-      "courses": [
-        {
-          "date": "13 july",
-          "time": "9h30",
-          "matiere": "ALTERNANCE - Internship"
         }
       ]
     }
