@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-07-19T21:49:13.907853",
+  "timestamp": "2026-07-20T07:53:16.435689",
   "weeks": {
     "30": {
       "semaine": 30,
@@ -51,6 +51,61 @@
         },
         {
           "date": "24 july",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        }
+      ]
+    },
+    "31": {
+      "semaine": 31,
+      "courses": [
+        {
+          "date": "27 july",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "27 july",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "28 july",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "28 july",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "29 july",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "29 july",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "30 july",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "30 july",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "31 july",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "31 july",
           "time": "14h00",
           "matiere": "ALTERNANCE - Internship"
         }
