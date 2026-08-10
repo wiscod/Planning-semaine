@@ -1,4 +1,60 @@
 {
-  "timestamp": "2026-08-09T21:28:19.725527",
-  "weeks": {}
+  "timestamp": "2026-08-10T06:07:55.588505",
+  "weeks": {
+    "34": {
+      "semaine": 34,
+      "courses": [
+        {
+          "date": "17 august",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "17 august",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "18 august",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "18 august",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "19 august",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "19 august",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "20 august",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "20 august",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "21 august",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "21 august",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        }
+      ]
+    }
+  }
 }
