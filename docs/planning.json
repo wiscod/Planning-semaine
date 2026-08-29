@@ -1,56 +1,56 @@
 {
-  "timestamp": "2026-08-28T23:47:53.193611",
+  "timestamp": "2026-08-29T03:04:22.316209",
   "weeks": {
-    "35": {
-      "semaine": 35,
+    "36": {
+      "semaine": 36,
       "courses": [
         {
-          "date": "24 august",
+          "date": "31 august",
           "time": "9h30 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "24 august",
+          "date": "31 august",
           "time": "14h00 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "25 august",
+          "date": "1 september",
           "time": "9h30 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "25 august",
+          "date": "1 september",
           "time": "14h00 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "26 august",
+          "date": "2 september",
           "time": "9h30 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "26 august",
+          "date": "2 september",
           "time": "14h00 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "27 august",
+          "date": "3 september",
           "time": "9h30 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "27 august",
+          "date": "3 september",
           "time": "14h00 (Distanciel)",
-          "matiere": "CCSN - Blockchain Security"
+          "matiere": "Web Exploits - Advanced"
         },
         {
-          "date": "28 august",
+          "date": "4 september",
           "time": "9h30",
           "matiere": "ALTERNANCE - Internship"
         },
         {
-          "date": "28 august",
+          "date": "4 september",
           "time": "14h00",
           "matiere": "ALTERNANCE - Internship"
         }
