@@ -1,58 +1,18 @@
 {
-  "timestamp": "2026-09-04T22:45:56.223707",
+  "timestamp": "2026-09-05T08:44:42.371713",
   "weeks": {
-    "36": {
-      "semaine": 36,
+    "37": {
+      "semaine": 37,
       "courses": [
         {
-          "date": "31 august",
-          "time": "9h30 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
+          "date": "7 september",
+          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Rattrapage"
         },
         {
-          "date": "31 august",
-          "time": "14h00 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "1 september",
-          "time": "9h30 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "1 september",
-          "time": "14h00 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "2 september",
-          "time": "9h30 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "2 september",
-          "time": "14h00 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "3 september",
-          "time": "9h30 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "3 september",
-          "time": "14h00 (Distanciel)",
-          "matiere": "Web Exploits - Advanced"
-        },
-        {
-          "date": "4 september",
-          "time": "9h30",
-          "matiere": "ALTERNANCE - Internship"
-        },
-        {
-          "date": "4 september",
-          "time": "14h00",
-          "matiere": "ALTERNANCE - Internship"
+          "date": "7 september",
+          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Rattrapage"
         }
       ]
     }
