@@ -1,18 +1,58 @@
 {
-  "timestamp": "2026-09-11T22:57:17.852017",
+  "timestamp": "2026-09-12T08:58:08.871187",
   "weeks": {
-    "37": {
-      "semaine": 37,
+    "38": {
+      "semaine": 38,
       "courses": [
         {
-          "date": "7 september",
+          "date": "14 september",
           "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Rattrapage"
+          "matiere": "Personal Development"
         },
         {
-          "date": "7 september",
+          "date": "14 september",
           "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
-          "matiere": "Rattrapage"
+          "matiere": "Personal Development"
+        },
+        {
+          "date": "15 september",
+          "time": "9h30 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Start-up & IT"
+        },
+        {
+          "date": "15 september",
+          "time": "14h00 (Presentiel - Salle H (Victor HUGO))",
+          "matiere": "Start-up & IT"
+        },
+        {
+          "date": "16 september",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "16 september",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "17 september",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "17 september",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "18 september",
+          "time": "9h30",
+          "matiere": "ALTERNANCE - Internship"
+        },
+        {
+          "date": "18 september",
+          "time": "14h00",
+          "matiere": "ALTERNANCE - Internship"
         }
       ]
     }
