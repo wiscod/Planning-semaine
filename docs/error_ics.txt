@@ -1,7 +1,65 @@
-Erreur ICS: 404 Client Error: Not Found for url: https://estiam-planning2026.hyperplanning.fr/hp/Telechargements/ical/Edt_DJIHOUA.ics?version=2025.8.9&icalsecurise=7264821A100800A05090C08AFF2D1B75E5E3F88C6A77EF3267F9D5CD83F39467BBD3DA4BB34F167CD336329520375381&param=643d5b312e2e36325d2666683d3126663d31
+Erreur ICS: HTTPSConnectionPool(host='estiam-planning2026.hyperplanning.fr', port=443): Max retries exceeded with url: /hp/Telechargements/ical/Edt_DJIHOUA.ics?version=2025.8.9&icalsecurise=7264821A100800A05090C08AFF2D1B75E5E3F88C6A77EF3267F9D5CD83F39467BBD3DA4BB34F167CD336329520375381&param=643d5b312e2e36325d2666683d3126663d31 (Caused by ConnectTimeoutError(<HTTPSConnection(host='estiam-planning2026.hyperplanning.fr', port=443) at 0x7f2b1cf9d750>, 'Connection to estiam-planning2026.hyperplanning.fr timed out. (connect timeout=10)'))
 Traceback (most recent call last):
-  File "/home/runner/work/Planning-semaine/Planning-semaine/planning_scraper.py", line 101, in get_courses_from_ics
-    response.raise_for_status()
-  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/models.py", line 1024, in raise_for_status
-    raise HTTPError(http_error_msg, response=self)
-requests.exceptions.HTTPError: 404 Client Error: Not Found for url: https://estiam-planning2026.hyperplanning.fr/hp/Telechargements/ical/Edt_DJIHOUA.ics?version=2025.8.9&icalsecurise=7264821A100800A05090C08AFF2D1B75E5E3F88C6A77EF3267F9D5CD83F39467BBD3DA4BB34F167CD336329520375381&param=643d5b312e2e36325d2666683d3126663d31
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connection.py", line 239, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connectionpool.py", line 494, in _make_request
+    raise new_e
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connectionpool.py", line 470, in _make_request
+    self._validate_conn(conn)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connectionpool.py", line 1125, in _validate_conn
+    conn.connect()
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connection.py", line 827, in connect
+    self.sock = sock = self._new_conn()
+                       ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connection.py", line 248, in _new_conn
+    raise ConnectTimeoutError(
+urllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='estiam-planning2026.hyperplanning.fr', port=443) at 0x7f2b1cf9d750>, 'Connection to estiam-planning2026.hyperplanning.fr timed out. (connect timeout=10)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='estiam-planning2026.hyperplanning.fr', port=443): Max retries exceeded with url: /hp/Telechargements/ical/Edt_DJIHOUA.ics?version=2025.8.9&icalsecurise=7264821A100800A05090C08AFF2D1B75E5E3F88C6A77EF3267F9D5CD83F39467BBD3DA4BB34F167CD336329520375381&param=643d5b312e2e36325d2666683d3126663d31 (Caused by ConnectTimeoutError(<HTTPSConnection(host='estiam-planning2026.hyperplanning.fr', port=443) at 0x7f2b1cf9d750>, 'Connection to estiam-planning2026.hyperplanning.fr timed out. (connect timeout=10)'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/work/Planning-semaine/Planning-semaine/planning_scraper.py", line 100, in get_courses_from_ics
+    response = requests.get(ICS_URL, timeout=10)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/requests/adapters.py", line 688, in send
+    raise ConnectTimeout(e, request=request)
+requests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='estiam-planning2026.hyperplanning.fr', port=443): Max retries exceeded with url: /hp/Telechargements/ical/Edt_DJIHOUA.ics?version=2025.8.9&icalsecurise=7264821A100800A05090C08AFF2D1B75E5E3F88C6A77EF3267F9D5CD83F39467BBD3DA4BB34F167CD336329520375381&param=643d5b312e2e36325d2666683d3126663d31 (Caused by ConnectTimeoutError(<HTTPSConnection(host='estiam-planning2026.hyperplanning.fr', port=443) at 0x7f2b1cf9d750>, 'Connection to estiam-planning2026.hyperplanning.fr timed out. (connect timeout=10)'))
