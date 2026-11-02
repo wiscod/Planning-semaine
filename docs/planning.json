@@ -1,4 +1,35 @@
 {
-  "timestamp": "2026-11-01T19:17:50.014739",
-  "weeks": {}
+  "timestamp": "2026-11-02T00:12:44.134046",
+  "weeks": {
+    "46": {
+      "semaine": 46,
+      "courses": [
+        {
+          "date": "12 november",
+          "time": "9h30",
+          "matiere": "ANNU"
+        },
+        {
+          "date": "12 november",
+          "time": "9h30 (Distanciel)",
+          "matiere": "Telephony over IP"
+        },
+        {
+          "date": "12 november",
+          "time": "14h00",
+          "matiere": "ANNU"
+        },
+        {
+          "date": "12 november",
+          "time": "14h00 (Distanciel)",
+          "matiere": "Telephony over IP"
+        },
+        {
+          "date": "14 november",
+          "time": "10h00 (Distanciel)",
+          "matiere": "Hiring strategy"
+        }
+      ]
+    }
+  }
 }
