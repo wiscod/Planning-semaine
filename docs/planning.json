@@ -1,32 +1,52 @@
 {
-  "timestamp": "2026-11-08T19:15:39.416010",
+  "timestamp": "2026-11-09T00:29:59.598280",
   "weeks": {
-    "46": {
-      "semaine": 46,
+    "47": {
+      "semaine": 47,
       "courses": [
         {
-          "date": "12 november",
-          "time": "9h30",
-          "matiere": "ANNU"
+          "date": "17 november",
+          "time": "10h00 (Distanciel)",
+          "matiere": "Hiring strategy"
         },
         {
-          "date": "12 november",
+          "date": "18 november",
+          "time": "9h30 (Distanciel)",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "18 november",
+          "time": "14h00 (Distanciel)",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "19 november",
           "time": "9h30 (Distanciel)",
           "matiere": "Telephony over IP"
         },
         {
-          "date": "12 november",
-          "time": "14h00",
-          "matiere": "ANNU"
-        },
-        {
-          "date": "12 november",
+          "date": "19 november",
           "time": "14h00 (Distanciel)",
           "matiere": "Telephony over IP"
         },
         {
-          "date": "14 november",
+          "date": "20 november",
+          "time": "9h30 (Distanciel)",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "20 november",
+          "time": "14h00 (Distanciel)",
+          "matiere": "Industries Cursus"
+        },
+        {
+          "date": "21 november",
           "time": "10h00 (Distanciel)",
+          "matiere": "Hiring strategy"
+        },
+        {
+          "date": "21 november",
+          "time": "14h00 (Distanciel)",
           "matiere": "Hiring strategy"
         }
       ]
